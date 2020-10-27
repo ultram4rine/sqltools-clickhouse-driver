@@ -1,8 +1,8 @@
-import { IDriverAlias } from '@sqltools/types';
+import { IDriverAlias } from "@sqltools/types";
 
 /**
  * Aliases for yout driver. EG: PostgreSQL, PG, postgres can all resolve to your driver
  */
 export const DRIVER_ALIASES: IDriverAlias[] = [
-  { displayName: 'ClickHouse', value: 'ClickHouse'},
+  { displayName: "ClickHouse", value: "ClickHouse" },
 ];
