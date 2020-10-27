@@ -35,6 +35,7 @@
   ],
   "main": "./out/extension.js",
   "dependencies": {
+    "@apla/clickhouse": "^1.6.4",
     "@sqltools/base-driver": "latest",
     "@sqltools/types": "latest",
     "uuid": "^7.0.2"
