@@ -1,13 +1,13 @@
-import { ILanguageServerPlugin } from '@sqltools/types';
-import YourDriver from './driver';
-import { DRIVER_ALIASES } from './../constants';
+import { ILanguageServerPlugin } from "@sqltools/types";
+import ClickHouseDriver from "./driver";
+import { DRIVER_ALIASES } from "./../constants";
 
-const YourDriverPlugin: ILanguageServerPlugin = {
+const ClickHouseDriverPlugin: ILanguageServerPlugin = {
   register(server) {
     DRIVER_ALIASES.forEach(({ value }) => {
-      server.getContext().drivers.set(value, YourDriver as any);
+      server.getContext().drivers.set(value, ClickHouseDriver as any);
     });
-  }
-}
+  },
+};
 
-export default YourDriverPlugin;
+export default ClickHouseDriverPlugin;
