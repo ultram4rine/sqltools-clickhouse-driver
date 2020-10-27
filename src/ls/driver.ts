@@ -1,4 +1,4 @@
-import { ClickHouse, Options } from "@apla/clickhouse";
+import { ClickHouse } from "@apla/clickhouse";
 import AbstractDriver from "@sqltools/base-driver";
 import queries from "./queries";
 import {
@@ -10,42 +10,27 @@ import {
 } from "@sqltools/types";
 import { v4 as generateId } from "uuid";
 
+type ClickHouseOptions = any;
+
 export default class ClickHouseDriver
-  extends AbstractDriver<ClickHouse, Options>
+  extends AbstractDriver<ClickHouse, ClickHouseOptions>
   implements IConnectionDriver {
-  /**
-   * If you driver depends on node packages, list it below on `deps` prop.
-   * It will be installed automatically on first use of your driver.
-   */
-  public readonly deps: typeof AbstractDriver.prototype["deps"] = [
-    {
-      type: AbstractDriver.CONSTANTS.DEPENDENCY_PACKAGE,
-      name: "lodash",
-      // version: 'x.x.x',
-    },
-  ];
-
   queries = queries;
-
-  /** if you need to require your lib in runtime and then
-   * use `this.lib.methodName()` anywhere and vscode will take care of the dependencies
-   * to be installed on a cache folder
-   **/
-  // private get lib() {
-  //   return this.requireDep('node-packge-name') as DriverLib;
-  // }
 
   public async open() {
     if (this.connection) {
       return this.connection;
     }
 
-    this.needToInstallDependencies && (await this.needToInstallDependencies());
-    /**
-     * open your connection here!!!
-     */
+    let opts: ClickHouseOptions = {
+      host: this.credentials.host,
+      port: this.credentials.port,
+      user: this.credentials.user,
+      password: this.credentials.password,
+      protocol: this.credentials.protocol,
+    };
 
-    this.connection = fakeDbLib.open();
+    this.connection = new ClickHouse(opts);
     return this.connection;
   }
 
