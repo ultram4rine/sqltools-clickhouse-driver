@@ -4,9 +4,7 @@ import queryFactory from "@sqltools/base-driver/dist/lib/factory";
 /** write your queries here go fetch desired data. This queries are just examples copied from SQLite driver */
 
 const describeTable: IBaseQueries["describeTable"] = queryFactory`
-  SELECT C.*
-  FROM pragma_table_info('${(p) => p.label}') AS C
-  ORDER BY C.cid ASC
+  DESCRIBE TABLE ${(p) => p.database}.${(p) => p.label}
 `;
 
 const fetchColumns: IBaseQueries["fetchColumns"] = queryFactory`
@@ -32,32 +30,30 @@ SELECT count(1) AS total
 FROM ${(p) => p.table.label || p.table};
 `;
 
-const fetchTablesAndViews = (
-  type: ContextValue,
-  tableType = "table"
-): IBaseQueries["fetchTables"] => queryFactory`
+const fetchTables: IBaseQueries["fetchTables"] = queryFactory`
 SELECT name AS label,
-  '${type}' AS type
-FROM sqlite_master
-WHERE LOWER(type) LIKE '${tableType.toLowerCase()}'
-  AND name NOT LIKE 'sqlite_%'
+  'table' AS type
+FROM system.tables
+WHERE database == '${(p) => p.database}'
+  AND engine != 'View'
 ORDER BY name
 `;
-
-const fetchTables: IBaseQueries["fetchTables"] = fetchTablesAndViews(
-  ContextValue.TABLE
-);
-const fetchViews: IBaseQueries["fetchTables"] = fetchTablesAndViews(
-  ContextValue.VIEW,
-  "view"
-);
+const fetchViews: IBaseQueries["fetchTables"] = queryFactory`
+SELECT name AS label,
+  'view' AS type
+FROM system.tables
+WHERE database == '${(p) => p.database}'
+  AND engine == 'View'
+ORDER BY name
+`;
 
 const searchTables: IBaseQueries["searchTables"] = queryFactory`
 SELECT name AS label,
   type
-FROM sqlite_master
-${(p) =>
+FROM system.tables
+WHERE ${(p) =>
   p.search ? `WHERE LOWER(name) LIKE '%${p.search.toLowerCase()}%'` : ""}
+  AND database == '${(p) => p.datavase}'
 ORDER BY name
 `;
 const searchColumns: IBaseQueries["searchColumns"] = queryFactory`
