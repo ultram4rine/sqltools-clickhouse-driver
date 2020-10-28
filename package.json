@@ -3,6 +3,7 @@
   "displayName": "SQLTools ClickHouse",
   "description": "SQLTools Driver for ClickHouse",
   "version": "0.0.1",
+  "icon": "icon.png",
   "engines": {
     "vscode": "^1.42.0"
   },
