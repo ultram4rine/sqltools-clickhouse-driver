@@ -36,10 +36,8 @@ export default class ClickHouseDriver
 
   public async close() {
     if (!this.connection) return Promise.resolve();
-    /**
-     * cose you connection here!!
-     */
-    await fakeDbLib.close();
+
+    // ClickHouse connection is a http client, so we can just make it null.
     this.connection = null;
   }
 
