@@ -3,14 +3,24 @@
   "displayName": "SQLTools ClickHouse",
   "description": "SQLTools Driver for ClickHouse",
   "version": "0.0.1",
+  "publisher": "ultram4rine",
+  "license": "MIT",
   "icon": "icon.png",
+  "author": {
+    "name": "ultram4rine",
+    "email": "ultramarine730@gmail.com"
+  },
+  "homepage": "https://github.com/ultram4rine/sqltools-clickhouse-driver#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ultram4rine/sqltools-clickhouse-driver"
+  },
+  "bugs": {
+    "url": "https://github.com/ultram4rine/sqltools-clickhouse-driver/issues"
+  },
   "engines": {
     "vscode": "^1.42.0"
   },
-  "publisher": "ultram4rine",
-  "license": "MIT",
-  "repository": {},
-  "bugs": {},
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
