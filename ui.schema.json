@@ -5,8 +5,9 @@
     "database",
     "user",
     "password",
-    "protocol",
-    "chOprions"
+    "useHTTPS",
+    "readonly",
+    "queryOptions"
   ],
   "password": { "ui:widget": "password" }
 }

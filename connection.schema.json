@@ -3,12 +3,12 @@
   "type": "object",
   "properties": {
     "host": {
-      "title": "ClickHouse host to connect",
+      "title": "Host",
       "type": "string",
       "minLength": 1
     },
     "port": {
-      "title": "Server port",
+      "title": "Port",
       "type": "integer",
       "default": 8123
     },
@@ -18,12 +18,12 @@
       "minLength": 1
     },
     "user": {
-      "title": "Authentication user",
+      "title": "User",
       "type": "string",
       "minLength": 1
     },
     "password": {
-      "title": "Authentication password",
+      "title": "Password",
       "type": "string",
       "minLength": 1
     },
@@ -31,8 +31,12 @@
       "title": "Use https",
       "type": "boolean"
     },
-    "chOptions": {
-      "title": "Connection Options",
+    "readonly": {
+      "title": "Use only HTTP GET",
+      "type": "boolean"
+    },
+    "queryOptions": {
+      "title": "ClickHouse options",
       "type": "object",
       "properties": {
         "encrypt": {
