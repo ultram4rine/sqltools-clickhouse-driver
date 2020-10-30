@@ -2,13 +2,61 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
-    "database": {
-      "title": "Database file",
+    "host": {
+      "title": "ClickHouse host to connect",
       "type": "string",
       "minLength": 1
+    },
+    "port": {
+      "title": "Server port",
+      "type": "integer",
+      "default": 8123
+    },
+    "database": {
+      "title": "Database",
+      "type": "string",
+      "minLength": 1
+    },
+    "user": {
+      "title": "Authentication user",
+      "type": "string",
+      "minLength": 1
+    },
+    "password": {
+      "title": "Authentication password",
+      "type": "string",
+      "minLength": 1
+    },
+    "protocol": {
+      "title": "HTTPS or HTTP",
+      "type": "string",
+      "default": "http"
+    },
+    "chOptions": {
+      "title": "Connection Options",
+      "type": "object",
+      "properties": {
+        "encrypt": {
+          "title": "Encrypted connection",
+          "type": "boolean",
+          "default": true
+        },
+        "sslValidateCertificate": {
+          "title": "Validate Server Certificate",
+          "type": "boolean",
+          "default": true
+        },
+        "sslCryptoProvider": {
+          "title": "SSL Crypto Provider",
+          "type": "string",
+          "default": "openssl"
+        },
+        "sslTrustStore": {
+          "title": "SSL Trust Store",
+          "type": "string"
+        }
+      }
     }
   },
-  "required": [
-    "database"
-  ]
+  "required": ["host", "port", "database"]
 }

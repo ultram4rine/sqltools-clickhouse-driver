@@ -1,4 +1,12 @@
 {
-  "ui:order": ["database"],
-  "database": { "ui:widget": "file" }
+  "ui:order": [
+    "host",
+    "port",
+    "database",
+    "user",
+    "password",
+    "protocol",
+    "chOprions"
+  ],
+  "password": { "ui:widget": "password" }
 }
