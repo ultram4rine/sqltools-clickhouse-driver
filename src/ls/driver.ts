@@ -1,4 +1,3 @@
-import { ClickHouse } from "@apla/clickhouse";
 import AbstractDriver from "@sqltools/base-driver";
 import queries from "./queries";
 import {
@@ -8,7 +7,9 @@ import {
   ContextValue,
   Arg0,
 } from "@sqltools/types";
+import sqltoolsRequire from "@sqltools/base-driver/dist/lib/require";
 import { v4 as generateId } from "uuid";
+import ClickHouse from "@apla/clickhouse";
 
 type ClickHouseOptions = any;
 
@@ -42,33 +43,57 @@ export default class ClickHouseDriver
   }
 
   public query: typeof AbstractDriver["prototype"]["query"] = async (
-    queries,
+    query,
     opt = {}
   ) => {
-    const db = await this.open();
-    const queriesResults = await db.query(queries);
-    const resultsAgg: NSDatabase.IResult[] = [];
-    queriesResults.forEach((queryResult) => {
-      resultsAgg.push({
-        cols: Object.keys(queryResult[0]),
-        connId: this.getId(),
-        messages: [
-          {
-            date: new Date(),
-            message: `Query ok with ${queriesResults.length} results`,
-          },
-        ],
-        results: queryResult,
-        query: queries.toString(),
-        requestId: opt.requestId,
-        resultId: generateId(),
+    return this.open().then((ch) => {
+      return new Promise<NSDatabase.IResult[]>((resolve) => {
+        ch.query(query, (err, data) => {
+          if (err) {
+            return this.resolveErr(resolve, err, query);
+          }
+          return this.resolveQueryResults(resolve, data, query);
+        });
       });
     });
-    /**
-     * write the method to execute queries here!!
-     */
-    return resultsAgg;
   };
+
+  private resolveQueryResults(resolve, rows, query) {
+    const cols: string[] = [];
+    if (rows && rows.length > 0) {
+      for (const colName in rows[0]) {
+        cols.push(colName);
+      }
+    }
+
+    const res = {
+      connId: this.getId(),
+      results: rows,
+      cols: cols,
+      query: query,
+      messages: [],
+    } as NSDatabase.IResult;
+
+    return resolve([res]);
+  }
+
+  private resolveErr(resolve, err, query) {
+    const messages: string[] = [];
+    if (err.message) {
+      messages.push(err.message);
+    }
+
+    return resolve([
+      {
+        connId: this.getId(),
+        error: err,
+        results: [],
+        cols: [],
+        query: query,
+        messages: messages,
+      } as NSDatabase.IResult,
+    ]);
+  }
 
   /** if you need a different way to test your connection, you can set it here.
    * Otherwise by default we open and close the connection only
@@ -105,64 +130,9 @@ export default class ClickHouseDriver
         ];
       case ContextValue.TABLE:
       case ContextValue.VIEW:
-        let i = 0;
-        return <NSDatabase.IColumn[]>[
-          {
-            database: "fakedb",
-            label: `column${i++}`,
-            type: ContextValue.COLUMN,
-            dataType: "faketype",
-            schema: "fakeschema",
-            childType: ContextValue.NO_CHILD,
-            isNullable: false,
-            iconName: "column",
-            table: parent,
-          },
-          {
-            database: "fakedb",
-            label: `column${i++}`,
-            type: ContextValue.COLUMN,
-            dataType: "faketype",
-            schema: "fakeschema",
-            childType: ContextValue.NO_CHILD,
-            isNullable: false,
-            iconName: "column",
-            table: parent,
-          },
-          {
-            database: "fakedb",
-            label: `column${i++}`,
-            type: ContextValue.COLUMN,
-            dataType: "faketype",
-            schema: "fakeschema",
-            childType: ContextValue.NO_CHILD,
-            isNullable: false,
-            iconName: "column",
-            table: parent,
-          },
-          {
-            database: "fakedb",
-            label: `column${i++}`,
-            type: ContextValue.COLUMN,
-            dataType: "faketype",
-            schema: "fakeschema",
-            childType: ContextValue.NO_CHILD,
-            isNullable: false,
-            iconName: "column",
-            table: parent,
-          },
-          {
-            database: "fakedb",
-            label: `column${i++}`,
-            type: ContextValue.COLUMN,
-            dataType: "faketype",
-            schema: "fakeschema",
-            childType: ContextValue.NO_CHILD,
-            isNullable: false,
-            iconName: "column",
-            table: parent,
-          },
-        ];
+        return this.queryResults(
+          this.queries.fetchColumns(item as NSDatabase.ITable)
+        );
       case ContextValue.RESOURCE_GROUP:
         return this.getChildrenForGroup({ item, parent });
     }
@@ -174,37 +144,17 @@ export default class ClickHouseDriver
    * It gets the child based on child types
    */
   private async getChildrenForGroup({
-    parent,
     item,
   }: Arg0<IConnectionDriver["getChildrenForItem"]>) {
-    console.log({ item, parent });
     switch (item.childType) {
       case ContextValue.TABLE:
+        return this.queryResults(
+          this.queries.fetchTables(item as NSDatabase.ISchema)
+        );
       case ContextValue.VIEW:
-        let i = 0;
-        return <MConnectionExplorer.IChildItem[]>[
-          {
-            database: "fakedb",
-            label: `${item.childType}${i++}`,
-            type: item.childType,
-            schema: "fakeschema",
-            childType: ContextValue.COLUMN,
-          },
-          {
-            database: "fakedb",
-            label: `${item.childType}${i++}`,
-            type: item.childType,
-            schema: "fakeschema",
-            childType: ContextValue.COLUMN,
-          },
-          {
-            database: "fakedb",
-            label: `${item.childType}${i++}`,
-            type: item.childType,
-            schema: "fakeschema",
-            childType: ContextValue.COLUMN,
-          },
-        ];
+        return this.queryResults(
+          this.queries.fetchViews(item as NSDatabase.ISchema)
+        );
     }
     return [];
   }
@@ -215,94 +165,15 @@ export default class ClickHouseDriver
   public async searchItems(
     itemType: ContextValue,
     search: string,
-    _extraParams: any = {}
+    extraParams: any = {}
   ): Promise<NSDatabase.SearchableItem[]> {
     switch (itemType) {
       case ContextValue.TABLE:
-      case ContextValue.VIEW:
-        let j = 0;
-        return [
-          {
-            database: "fakedb",
-            label: `${search || "table"}${j++}`,
-            type: itemType,
-            schema: "fakeschema",
-            childType: ContextValue.COLUMN,
-          },
-          {
-            database: "fakedb",
-            label: `${search || "table"}${j++}`,
-            type: itemType,
-            schema: "fakeschema",
-            childType: ContextValue.COLUMN,
-          },
-          {
-            database: "fakedb",
-            label: `${search || "table"}${j++}`,
-            type: itemType,
-            schema: "fakeschema",
-            childType: ContextValue.COLUMN,
-          },
-        ];
+        return this.queryResults(this.queries.searchTables({ search }));
       case ContextValue.COLUMN:
-        let i = 0;
-        return [
-          {
-            database: "fakedb",
-            label: `${search || "column"}${i++}`,
-            type: ContextValue.COLUMN,
-            dataType: "faketype",
-            schema: "fakeschema",
-            childType: ContextValue.NO_CHILD,
-            isNullable: false,
-            iconName: "column",
-            table: "fakeTable",
-          },
-          {
-            database: "fakedb",
-            label: `${search || "column"}${i++}`,
-            type: ContextValue.COLUMN,
-            dataType: "faketype",
-            schema: "fakeschema",
-            childType: ContextValue.NO_CHILD,
-            isNullable: false,
-            iconName: "column",
-            table: "fakeTable",
-          },
-          {
-            database: "fakedb",
-            label: `${search || "column"}${i++}`,
-            type: ContextValue.COLUMN,
-            dataType: "faketype",
-            schema: "fakeschema",
-            childType: ContextValue.NO_CHILD,
-            isNullable: false,
-            iconName: "column",
-            table: "fakeTable",
-          },
-          {
-            database: "fakedb",
-            label: `${search || "column"}${i++}`,
-            type: ContextValue.COLUMN,
-            dataType: "faketype",
-            schema: "fakeschema",
-            childType: ContextValue.NO_CHILD,
-            isNullable: false,
-            iconName: "column",
-            table: "fakeTable",
-          },
-          {
-            database: "fakedb",
-            label: `${search || "column"}${i++}`,
-            type: ContextValue.COLUMN,
-            dataType: "faketype",
-            schema: "fakeschema",
-            childType: ContextValue.NO_CHILD,
-            isNullable: false,
-            iconName: "column",
-            table: "fakeTable",
-          },
-        ];
+        return this.queryResults(
+          this.queries.searchColumns({ search, ...extraParams })
+        );
     }
     return [];
   }
