@@ -35,31 +35,7 @@
       "title": "Use only HTTP GET",
       "type": "boolean"
     },
-    "queryOptions": {
-      "title": "ClickHouse options",
-      "type": "object",
-      "properties": {
-        "encrypt": {
-          "title": "Encrypted connection",
-          "type": "boolean",
-          "default": true
-        },
-        "sslValidateCertificate": {
-          "title": "Validate Server Certificate",
-          "type": "boolean",
-          "default": true
-        },
-        "sslCryptoProvider": {
-          "title": "SSL Crypto Provider",
-          "type": "string",
-          "default": "openssl"
-        },
-        "sslTrustStore": {
-          "title": "SSL Trust Store",
-          "type": "string"
-        }
-      }
-    }
+    "queryOptions": {}
   },
   "required": ["host", "port", "database"]
 }
