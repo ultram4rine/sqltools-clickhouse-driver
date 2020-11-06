@@ -26,6 +26,7 @@ export default class ClickHouseDriver
     let opts: ClickHouseOptions = {
       host: this.credentials.host,
       port: this.credentials.port,
+      database: this.credentials.database,
       user: this.credentials.user,
       password: this.credentials.password,
       protocol: this.credentials.protocol,
@@ -95,12 +96,20 @@ export default class ClickHouseDriver
     ]);
   }
 
-  /** if you need a different way to test your connection, you can set it here.
-   * Otherwise by default we open and close the connection only
-   */
   public async testConnection() {
     await this.open();
-    await this.query("SELECT 1", {});
+
+    const db = this.credentials.database;
+    const dbFound = await this.query(`SHOW DATABASES LIKE '${db}'`, {});
+    if (dbFound[0].error) {
+      return Promise.reject({
+        message: `Cannot get database list: ${dbFound[0].error}`,
+      });
+    }
+    if (dbFound[0].results.length !== 1) {
+      return Promise.reject({ message: `Cannot find ${db} database` });
+    }
+    await this.close();
   }
 
   /**
