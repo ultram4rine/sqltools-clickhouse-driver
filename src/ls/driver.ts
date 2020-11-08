@@ -11,10 +11,11 @@ import sqltoolsRequire from "@sqltools/base-driver/dist/lib/require";
 import { v4 as generateId } from "uuid";
 import ClickHouse from "@apla/clickhouse";
 
+type ClickHouseLib = any;
 type ClickHouseOptions = any;
 
 export default class ClickHouseDriver
-  extends AbstractDriver<ClickHouse, ClickHouseOptions>
+  extends AbstractDriver<ClickHouseLib, ClickHouseOptions>
   implements IConnectionDriver {
   queries = queries;
 
@@ -29,7 +30,8 @@ export default class ClickHouseDriver
       database: this.credentials.database,
       user: this.credentials.user,
       password: this.credentials.password,
-      protocol: this.credentials.protocol,
+      protocol: this.credentials.useHTTPS ? "https:" : "http",
+      readonly: this.credentials.readonly,
     };
 
     this.connection = new ClickHouse(opts);
