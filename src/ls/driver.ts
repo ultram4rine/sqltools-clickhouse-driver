@@ -55,7 +55,11 @@ export default class ClickHouseDriver
         const cols: string[] = [];
         const rows: string[] = [];
 
-        const stream = ch.query(query);
+        const stream = ch.query(query, {
+          queryOptions: {
+            database: this.credentials.database,
+          },
+        });
 
         stream.on("metadata", (columns) => {
           for (const col of columns) {
