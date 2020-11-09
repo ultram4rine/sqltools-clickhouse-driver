@@ -8,14 +8,12 @@ const describeTable: IBaseQueries["describeTable"] = queryFactory`
 `;
 
 const fetchColumns: IBaseQueries["fetchColumns"] = queryFactory`
-SELECT C.name AS label,
-  C.*,
-  C.type AS dataType,
-  C."notnull" AS isNullable,
-  C.pk AS isPk,
+SELECT name AS label,
+  type AS dataType,
+  default_expression AS "defaultValue",
   '${ContextValue.COLUMN}' as type
-FROM pragma_table_info('${(p) => p.label}') AS C
-ORDER BY cid ASC
+FROM system.columns
+ORDER BY position ASC
 `;
 
 const fetchRecords: IBaseQueries["fetchRecords"] = queryFactory`
@@ -57,31 +55,15 @@ WHERE ${(p) =>
 ORDER BY name
 `;
 const searchColumns: IBaseQueries["searchColumns"] = queryFactory`
-SELECT C.name AS label,
-  T.name AS "table",
-  C.type AS dataType,
+SELECT name AS label,
+  table,
+  type AS dataType,
   C."notnull" AS isNullable,
-  C.pk AS isPk,
   '${ContextValue.COLUMN}' as type
-FROM sqlite_master AS T
-LEFT OUTER JOIN pragma_table_info((T.name)) AS C ON 1 = 1
-WHERE 1 = 1
-${(p) =>
-  p.tables.filter((t) => !!t.label).length
-    ? `AND LOWER(T.name) IN (${p.tables
-        .filter((t) => !!t.label)
-        .map((t) => `'${t.label}'`.toLowerCase())
-        .join(", ")})`
-    : ""}
-${(p) =>
-  p.search
-    ? `AND (
-    LOWER(T.name || '.' || C.name) LIKE '%${p.search.toLowerCase()}%'
-    OR LOWER(C.name) LIKE '%${p.search.toLowerCase()}%'
-  )`
-    : ""}
-ORDER BY C.name ASC,
-  C.cid ASC
+FROM system.columns
+WHERE database = ${(p) => p.database} AND table = ${(p) =>
+  p.table.label || p.table}
+ORDER BY name ASC
 LIMIT ${(p) => p.limit || 100}
 `;
 
