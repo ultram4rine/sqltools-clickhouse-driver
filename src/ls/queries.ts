@@ -1,8 +1,6 @@
 import { IBaseQueries, ContextValue } from "@sqltools/types";
 import queryFactory from "@sqltools/base-driver/dist/lib/factory";
 
-/** write your queries here go fetch desired data. This queries are just examples copied from SQLite driver */
-
 const describeTable: IBaseQueries["describeTable"] = queryFactory`
   DESCRIBE TABLE ${(p) => p.database}.${(p) => p.label}
 `;
