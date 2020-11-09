@@ -30,7 +30,7 @@ export default class ClickHouseDriver
       database: this.credentials.database,
       user: this.credentials.user,
       password: this.credentials.password,
-      protocol: this.credentials.useHTTPS ? "https:" : "http",
+      protocol: this.credentials.useHTTPS ? "https:" : "http:",
       readonly: this.credentials.readonly,
     };
 
