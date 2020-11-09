@@ -32,6 +32,7 @@ export default class ClickHouseDriver
       password: this.credentials.password,
       protocol: this.credentials.useHTTPS ? "https:" : "http:",
       readonly: this.credentials.readonly,
+      dataObjects: true,
     };
 
     this.connection = new ClickHouse(opts);
@@ -51,66 +52,67 @@ export default class ClickHouseDriver
   ) => {
     return this.open().then((ch) => {
       return new Promise<NSDatabase.IResult[]>((resolve) => {
-        ch.query(query, (err, data) => {
-          if (err) {
-            return this.resolveErr(resolve, err, query);
+        const cols: string[] = [];
+        const rows: string[] = [];
+
+        const stream = ch.query(query);
+
+        stream.on("metadata", (columns) => {
+          for (const col of columns) {
+            cols.push(col.name);
           }
-          return this.resolveQueryResults(resolve, data, query);
+        });
+        stream.on("data", (row) => rows.push(row));
+        stream.on("error", (err) => {
+          const messages: string[] = [];
+          if (err.message) {
+            messages.push(err.message);
+          }
+
+          return resolve([
+            {
+              connId: this.getId(),
+              error: err,
+              results: [],
+              cols: [],
+              query: query,
+              messages: messages,
+            } as NSDatabase.IResult,
+          ]);
+        });
+        stream.on("end", () => {
+          const res = {
+            connId: this.getId(),
+            cols: cols,
+            results: rows,
+            query: query,
+            messages: [],
+          } as NSDatabase.IResult;
+
+          return resolve([res]);
         });
       });
     });
   };
 
-  private resolveQueryResults(resolve, rows, query) {
-    const cols: string[] = [];
-    if (rows && rows.length > 0) {
-      for (const colName in rows[0]) {
-        cols.push(colName);
-      }
-    }
-
-    const res = {
-      connId: this.getId(),
-      results: rows,
-      cols: cols,
-      query: query,
-      messages: [],
-    } as NSDatabase.IResult;
-
-    return resolve([res]);
-  }
-
-  private resolveErr(resolve, err, query) {
-    const messages: string[] = [];
-    if (err.message) {
-      messages.push(err.message);
-    }
-
-    return resolve([
-      {
-        connId: this.getId(),
-        error: err,
-        results: [],
-        cols: [],
-        query: query,
-        messages: messages,
-      } as NSDatabase.IResult,
-    ]);
-  }
-
   public async testConnection() {
     await this.open();
 
     const db = this.credentials.database;
-    const dbFound = await this.query(`SHOW DATABASES LIKE '${db}'`, {});
+    const dbFound = await this.query(
+      `SELECT name FROM system.databases WHERE name LIKE '${db}'`,
+      {}
+    );
     if (dbFound[0].error) {
       return Promise.reject({
         message: `Cannot get database list: ${dbFound[0].error}`,
       });
     }
-    if (dbFound[0].results.length !== 1) {
-      return Promise.reject({ message: `Cannot find ${db} database` });
-    }
+    /*if (dbFound[0].results.length !== 1) {
+      return Promise.reject({
+        message: `Cannot find ${db} database: ${dbFound[0]}`,
+      });
+    }*/
     await this.close();
   }
 
