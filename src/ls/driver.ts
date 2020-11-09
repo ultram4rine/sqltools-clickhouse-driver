@@ -7,8 +7,6 @@ import {
   ContextValue,
   Arg0,
 } from "@sqltools/types";
-import sqltoolsRequire from "@sqltools/base-driver/dist/lib/require";
-import { v4 as generateId } from "uuid";
 import ClickHouse from "@apla/clickhouse";
 
 type ClickHouseLib = any;
@@ -27,7 +25,6 @@ export default class ClickHouseDriver
     let opts: ClickHouseOptions = {
       host: this.credentials.host,
       port: this.credentials.port,
-      database: this.credentials.database,
       user: this.credentials.user,
       password: this.credentials.password,
       protocol: this.credentials.useHTTPS ? "https:" : "http:",
@@ -46,10 +43,7 @@ export default class ClickHouseDriver
     this.connection = null;
   }
 
-  public query: typeof AbstractDriver["prototype"]["query"] = async (
-    query,
-    opt = {}
-  ) => {
+  public query: typeof AbstractDriver["prototype"]["query"] = async (query) => {
     return this.open().then((ch) => {
       return new Promise<NSDatabase.IResult[]>((resolve) => {
         const cols: string[] = [];
