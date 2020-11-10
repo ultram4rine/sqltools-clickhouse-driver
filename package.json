@@ -1,6 +1,6 @@
 {
   "name": "sqltools-clickhouse-driver",
-  "displayName": "SQLTools ClickHouse",
+  "displayName": "SQLTools ClickHouse Driver",
   "description": "SQLTools Driver for ClickHouse",
   "version": "0.0.1",
   "publisher": "ultram4rine",
