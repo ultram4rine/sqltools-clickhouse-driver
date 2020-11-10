@@ -1,5 +1,4 @@
 import AbstractDriver from "@sqltools/base-driver";
-import queries from "./queries";
 import {
   IConnectionDriver,
   MConnectionExplorer,
@@ -7,6 +6,8 @@ import {
   ContextValue,
   Arg0,
 } from "@sqltools/types";
+import queries from "./queries";
+import keywordsCompletion from "./keywords";
 import ClickHouse from "@apla/clickhouse";
 
 type ClickHouseLib = any;
@@ -209,7 +210,14 @@ export default class ClickHouseDriver
     return [];
   }
 
-  public getStaticCompletions: IConnectionDriver["getStaticCompletions"] = async () => {
-    return {};
+  private completionsCache: {
+    [w: string]: NSDatabase.IStaticCompletion;
+  } = null;
+  public getStaticCompletions = async () => {
+    if (this.completionsCache) return this.completionsCache;
+
+    this.completionsCache = keywordsCompletion;
+
+    return this.completionsCache;
   };
 }
