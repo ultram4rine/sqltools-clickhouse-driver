@@ -1,9 +1,9 @@
 {
   "ui:order": [
-    "host",
+    "server",
     "port",
     "database",
-    "user",
+    "username",
     "password",
     "useHTTPS",
     "readonly",

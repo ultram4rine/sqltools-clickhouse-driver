@@ -2,8 +2,8 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
-    "host": {
-      "title": "Host",
+    "server": {
+      "title": "Server",
       "type": "string",
       "minLength": 1
     },
@@ -17,8 +17,8 @@
       "type": "string",
       "minLength": 1
     },
-    "user": {
-      "title": "User",
+    "username": {
+      "title": "Username",
       "type": "string",
       "minLength": 1
     },
@@ -37,5 +37,5 @@
     },
     "queryOptions": {}
   },
-  "required": ["host", "port", "database"]
+  "required": ["server", "port", "database"]
 }
