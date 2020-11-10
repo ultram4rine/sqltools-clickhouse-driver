@@ -114,6 +114,18 @@ export default class ClickHouseDriver
     await this.close();
   }
 
+  private async getColumns(
+    parent: NSDatabase.ITable
+  ): Promise<NSDatabase.IColumn[]> {
+    const results = await this.queryResults(this.queries.fetchColumns(parent));
+    return results.map((col) => ({
+      ...col,
+      iconName: col.isPk ? "pk" : null,
+      childType: ContextValue.NO_CHILD,
+      table: parent,
+    }));
+  }
+
   /**
    * This method is a helper to generate the connection explorer tree.
    * it gets the child items based on current item
@@ -125,6 +137,15 @@ export default class ClickHouseDriver
     switch (item.type) {
       case ContextValue.CONNECTION:
       case ContextValue.CONNECTED_CONNECTION:
+        return <NSDatabase.IDatabase[]>[
+          {
+            label: this.credentials.database,
+            database: this.credentials.database,
+            type: ContextValue.DATABASE,
+            detail: "database",
+          },
+        ];
+      case ContextValue.DATABASE:
         return <MConnectionExplorer.IChildItem[]>[
           {
             label: "Tables",
@@ -141,9 +162,7 @@ export default class ClickHouseDriver
         ];
       case ContextValue.TABLE:
       case ContextValue.VIEW:
-        return this.queryResults(
-          this.queries.fetchColumns(item as NSDatabase.ITable)
-        );
+        return this.getColumns(item as NSDatabase.ITable);
       case ContextValue.RESOURCE_GROUP:
         return this.getChildrenForGroup({ item, parent });
     }
@@ -155,16 +174,17 @@ export default class ClickHouseDriver
    * It gets the child based on child types
    */
   private async getChildrenForGroup({
+    parent,
     item,
   }: Arg0<IConnectionDriver["getChildrenForItem"]>) {
     switch (item.childType) {
       case ContextValue.TABLE:
         return this.queryResults(
-          this.queries.fetchTables(item as NSDatabase.ISchema)
+          this.queries.fetchTables(parent as NSDatabase.ISchema)
         );
       case ContextValue.VIEW:
         return this.queryResults(
-          this.queries.fetchViews(item as NSDatabase.ISchema)
+          this.queries.fetchViews(parent as NSDatabase.ISchema)
         );
     }
     return [];

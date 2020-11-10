@@ -7,61 +7,64 @@ const describeTable: IBaseQueries["describeTable"] = queryFactory`
 
 const fetchColumns: IBaseQueries["fetchColumns"] = queryFactory`
 SELECT name AS label,
-  type AS dataType,
-  default_expression AS "defaultValue",
-  '${ContextValue.COLUMN}' as type
-FROM system.columns
-ORDER BY position ASC
+  c.type AS dataType,
+  c.default_expression AS defaultValue,
+  '${ContextValue.COLUMN}' AS type,
+  c.is_in_primary_key AS isPk
+FROM system.columns AS c
+WHERE c.table == '${(p) => p.label}'
+ORDER BY c.position ASC
 `;
 
 const fetchRecords: IBaseQueries["fetchRecords"] = queryFactory`
 SELECT *
 FROM ${(p) => p.table.label || p.table}
 LIMIT ${(p) => p.limit || 50}
-OFFSET ${(p) => p.offset || 0};
+OFFSET ${(p) => p.offset || 0}
 `;
 
 const countRecords: IBaseQueries["countRecords"] = queryFactory`
 SELECT count(1) AS total
-FROM ${(p) => p.table.label || p.table};
+FROM ${(p) => p.table.label || p.table}
 `;
 
 const fetchTables: IBaseQueries["fetchTables"] = queryFactory`
-SELECT name AS label,
-  'table' AS type
-FROM system.tables
-WHERE database == '${(p) => p.database}'
-  AND engine != 'View'
-ORDER BY name
+SELECT t.name AS label,
+  t.database AS database,
+  '${ContextValue.TABLE}' AS type
+FROM system.tables AS t
+WHERE t.database == '${(p) => p.database}'
+  AND t.engine != 'View'
+ORDER BY t.name
 `;
 const fetchViews: IBaseQueries["fetchTables"] = queryFactory`
-SELECT name AS label,
-  'view' AS type
-FROM system.tables
-WHERE database == '${(p) => p.database}'
-  AND engine == 'View'
-ORDER BY name
+SELECT t.name AS label,
+  t.database AS database,
+  '${ContextValue.VIEW}' AS type
+FROM system.tables AS t
+WHERE t.database == '${(p) => p.database}'
+  AND t.engine == 'View'
+ORDER BY t.name
 `;
 
 const searchTables: IBaseQueries["searchTables"] = queryFactory`
 SELECT name AS label,
-  type
-FROM system.tables
+  t.engine AS type
+FROM system.tables AS t
 WHERE ${(p) =>
   p.search ? `WHERE LOWER(name) LIKE '%${p.search.toLowerCase()}%'` : ""}
-  AND database == '${(p) => p.datavase}'
+  AND database == '${(p) => p.database}'
 ORDER BY name
 `;
 const searchColumns: IBaseQueries["searchColumns"] = queryFactory`
-SELECT name AS label,
-  table,
-  type AS dataType,
-  C."notnull" AS isNullable,
+SELECT c.name AS label,
+  c.table AS table,
+  c.type AS dataType,
   '${ContextValue.COLUMN}' as type
-FROM system.columns
+FROM system.columns AS c
 WHERE database = ${(p) => p.database} AND table = ${(p) =>
   p.table.label || p.table}
-ORDER BY name ASC
+ORDER BY c.name ASC
 LIMIT ${(p) => p.limit || 100}
 `;
 
