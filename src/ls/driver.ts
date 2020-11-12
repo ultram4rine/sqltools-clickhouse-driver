@@ -24,9 +24,9 @@ export default class ClickHouseDriver
     }
 
     let opts: ClickHouseOptions = {
-      host: this.credentials.host,
+      host: this.credentials.server,
       port: this.credentials.port,
-      user: this.credentials.user,
+      user: this.credentials.username,
       password: this.credentials.password,
       protocol: this.credentials.useHTTPS ? "https:" : "http:",
       readonly: this.credentials.readonly,
