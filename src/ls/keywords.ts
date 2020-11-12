@@ -1,10 +1,12 @@
 import { NSDatabase } from "@sqltools/types";
 
+// TODO: more keywods!
 const keywordsArr = [
   "ALTER",
   "CREATE",
   "DROP",
   "FROM",
+  "LIMIT",
   "SELECT",
   "TABLE",
   "INSERT",
