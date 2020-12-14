@@ -81,7 +81,7 @@
     "glob": "^7.1.6",
     "mocha": "^8.2.1",
     "nyc": "^15.1.0",
-    "typescript": "^4.1.2",
+    "typescript": "^4.1.3",
     "vscode-test": "^1.4.1"
   }
 }
