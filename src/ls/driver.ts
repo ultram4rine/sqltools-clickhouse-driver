@@ -214,9 +214,36 @@ export default class ClickHouseDriver
     [w: string]: NSDatabase.IStaticCompletion;
   } = null;
   public getStaticCompletions = async () => {
-    if (this.completionsCache) return this.completionsCache;
+    if (this.completionsCache) {
+      return this.completionsCache;
+    }
 
-    this.completionsCache = keywordsCompletion;
+    try {
+      this.completionsCache = keywordsCompletion;
+
+      const functions = await this.queryResults(
+        "SELECT name AS label FROM system.functions ORDER BY name ASC"
+      );
+      const dataTypes = await this.queryResults(
+        "SELECT name AS label, alias_to AS desc FROM system.data_type_families ORDER BY name ASC"
+      );
+
+      functions.concat(dataTypes).forEach((item: any) => {
+        this.completionsCache[item.label] = {
+          label: item.label,
+          detail: item.label,
+          filterText: item.label,
+          sortText: "" + item.label,
+          documentation: {
+            value: `\`\`\`yaml\nWORD: ${item.label}\nTYPE: ${item.desc}\n\`\`\``,
+            kind: "markdown",
+          },
+        };
+      });
+    } catch (error) {
+      // use default reserved words
+      this.completionsCache = keywordsCompletion;
+    }
 
     return this.completionsCache;
   };
