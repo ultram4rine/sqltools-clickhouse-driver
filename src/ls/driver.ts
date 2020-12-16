@@ -38,7 +38,9 @@ export default class ClickHouseDriver
   }
 
   public async close() {
-    if (!this.connection) return Promise.resolve();
+    if (!this.connection) {
+      return Promise.resolve();
+    }
 
     // ClickHouse connection is a http client, so we can just make it null.
     this.connection = null;
