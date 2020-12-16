@@ -14,4 +14,4 @@ install:
     fi
 
 script:
-  - npm install && npm run test
+  - npm install && npm run compile
