@@ -1,6 +1,6 @@
 # SQLTools ClickHouse Driver
 
-[![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/ultram4rine.sqltools-clickhouse-driver?style=flat-square)](https://marketplace.visualstudio.com/items/ultram4rine.sqltools-clickhouse-driver/changelog) [![License](https://img.shields.io/github/license/ultram4rine/sqltools-clickhouse-driver?style=flat-square)](https://github.com/ultram4rine/sqltools-clickhouse-driver/blob/master/LICENSE) [![Build Status](https://img.shields.io/travis/ultram4rine/sqltools-clickhouse-driver?style=flat-square)](https://travis-ci.com/ultram4rine/sqltools-clickhouse-driver)
+[![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/ultram4rine.sqltools-clickhouse-driver?style=flat-square)](https://marketplace.visualstudio.com/items/ultram4rine.sqltools-clickhouse-driver/changelog) [![License](https://img.shields.io/github/license/ultram4rine/sqltools-clickhouse-driver?style=flat-square)](https://github.com/ultram4rine/sqltools-clickhouse-driver/blob/master/LICENSE) [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ultram4rine/sqltools-clickhouse-driver/CI?style=flat-square)](https://github.com/ultram4rine/sqltools-clickhouse-driver/actions?query=workflow%3ACI)
 
 [ClickHouse](https://clickhouse.tech/) driver for [SQLTools](https://vscode-sqltools.mteixeira.dev/) VS Code extension.
 
