@@ -9,6 +9,5 @@ node_modules/**
 **/*.map
 **/*.ts
 
-.travis.yml
 .ncurc.json
 .nvmrc
