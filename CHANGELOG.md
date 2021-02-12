@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.2.1]
+
+- Fixed driver loading.
+
 ## [0.2.0]
 
 - Fixed problem with export/save result;
