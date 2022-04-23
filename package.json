@@ -21,8 +21,13 @@
   "badges": [
     {
       "url": "https://img.shields.io/visual-studio-marketplace/v/ultram4rine.sqltools-clickhouse-driver?style=flat-square",
-      "href": "https://marketplace.visualstudio.com/items/ultram4rine.sqltools-clickhouse-driver/changelog",
+      "href": "https://marketplace.visualstudio.com/items/ultram4rine.sqltools-clickhouse-driver",
       "description": "Visual Studio Marketplace Version"
+    },
+    {
+      "url": "https://img.shields.io/open-vsx/v/ultram4rine/sqltools-clickhouse-driver?style=flat-square",
+      "href": "https://open-vsx.org/extension/ultram4rine/sqltools-clickhouse-driver",
+      "description": "Open VSX Version"
     },
     {
       "url": "https://img.shields.io/github/license/ultram4rine/sqltools-clickhouse-driver?style=flat-square",
