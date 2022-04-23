@@ -1,12 +1,15 @@
-.vscode/**
-.vscode-test/**
-out/test/**
-src/**
-.gitignore
-**/tsconfig.json
-**/.eslintrc.json
+.github/
+.vscode/
+.vscode-test/
+node_modules/
+src/
+
 **/*.map
 **/*.ts
+**/*.vsix
 
+.babelrs.js
+.gitignore
 .ncurc.json
 .nvmrc
+tsconfig.json
