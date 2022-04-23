@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.2] - 2022-04-23
+
+## Changed
+
+- Extension now bundled with `esbuild`.
+
 ## [0.2.1] - 2021-02-12
 
 ### Fixed
