@@ -39,10 +39,12 @@
     "vscode": "^1.42.0"
   },
   "scripts": {
-    "compile": "rimraf ./out && tsc -p ./",
-    "watch": "rimraf ./out && tsc -watch -p ./",
-    "prepackage": "npm run compile",
-    "package": "vsce package --no-yarn --allow-star-activation",
+    "clean": "rimraf -rf out *.vsix",
+    "esbuild:ext": "esbuild ./src/extension.ts --bundle --external:vscode --platform=node --tsconfig=./tsconfig.json --log-level=info --color=true --format=cjs --target=es2017 --minify --outfile=./out/extension.js",
+    "esbuild:ls": "esbuild ./src/ls/plugin.ts --bundle --external:vscode --platform=node --tsconfig=./tsconfig.json --log-level=info --color=true --format=cjs --target=es2017 --minify --outfile=./out/ls/plugin.js",
+    "esbuild": "npm run esbuild:ext && npm run esbuild:ls",
+    "prepackage": "npm run clean && npm run esbuild",
+    "package": "vsce package --no-yarn --allow-star-activation -o .",
     "vscode:publish": "vsce publish --no-yarn --allow-star-activation -p '$VSCE_PAT' -i"
   },
   "keywords": [
@@ -75,6 +77,7 @@
     "@types/node": "^17.0.25",
     "@types/uuid": "^8.3.4",
     "@types/vscode": "^1.42.0",
+    "esbuild": "^0.14.38",
     "rimraf": "^3.0.2",
     "typescript": "^4.6.3",
     "vsce": "^2.7.0"
