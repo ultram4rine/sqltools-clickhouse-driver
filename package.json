@@ -45,7 +45,7 @@
     "esbuild": "npm run esbuild:ext && npm run esbuild:ls",
     "prepackage": "npm run clean && npm run esbuild",
     "package": "vsce package --no-yarn --allow-star-activation -o .",
-    "vscode:publish": "vsce publish --no-yarn --allow-star-activation -p '$VSCE_PAT' -i"
+    "vscode:publish": "vsce publish --no-yarn --allow-star-activation -p $VSCE_PAT -i"
   },
   "keywords": [
     "clickhouse",
