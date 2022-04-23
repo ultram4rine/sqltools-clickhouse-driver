@@ -65,10 +65,15 @@ jobs:
         with:
           name: vsix
 
-      - name: Publish
+      - name: Publish to Visual Studio Marketplace
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
-        run: npm run vscode:publish sqltools-clickhouse-driver-*.vsix
+        run: npm run publish:vsce sqltools-clickhouse-driver-*.vsix
+
+      - name: Publish to Open VSX Registry
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: npm run publish:ovsx vscode-choosealicense-*.vsix
 
       - name: Create release
         uses: softprops/action-gh-release@v1
