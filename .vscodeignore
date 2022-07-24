@@ -12,5 +12,4 @@ src/
 .babelrs.js
 .gitignore
 .ncurc.json
-.nvmrc
 tsconfig.json
