@@ -80,7 +80,7 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.18.10",
-    "@types/node": "^18.0.6",
+    "@types/node": "^18.7.14",
     "@types/uuid": "^8.3.4",
     "@types/vscode": "^1.42.0",
     "esbuild": "^0.15.6",
