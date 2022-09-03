@@ -3,16 +3,18 @@ name: CI/CD
 on:
   push:
     paths-ignore:
+      - ".devcontainer/**"
       - ".github/dependabot.yml"
+      - ".ncurc.json"
       - "*.md"
       - "LICENSE"
-      - "ncurc.json"
   pull_request:
     paths-ignore:
+      - ".devcontainer/**"
       - ".github/dependabot.yml"
+      - ".ncurc.json"
       - "*.md"
       - "LICENSE"
-      - "ncurc.json"
 
 jobs:
   build:
