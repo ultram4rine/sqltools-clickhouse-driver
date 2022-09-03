@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Update 'VARIANT' to pick an LTS version of Node.js: 18, 16, 14.
+        # Append -bullseye or -buster to pin to an OS version.
+        # Use -bullseye variants on local arm64/Apple Silicon.
+        VARIANT: 18-bullseye
+    volumes:
+      - ..:/workspace:cached
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+    network_mode: service:db
+
+    # Uncomment the next line to use a non-root user for all processes.
+    user: node
+
+  db:
+    image: yandex/clickhouse-server:21.3
+    restart: unless-stopped
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse yandex/clickhouse-server
+
+volumes:
+  clickhouse-data:
