@@ -76,7 +76,7 @@
     "@apla/clickhouse": "^1.6.4",
     "@sqltools/base-driver": "latest",
     "@sqltools/types": "latest",
-    "uuid": "^8.3.2"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.18.10",
