@@ -1,4 +1,8 @@
-import ClickHouse from "@apla/clickhouse";
+import {
+  createClient,
+  ClickHouseClient,
+  ClickHouseClientConfigOptions,
+} from "@clickhouse/client";
 import queries from "./queries";
 import keywordsCompletion from "./keywords";
 import AbstractDriver from "@sqltools/base-driver";
@@ -11,12 +15,10 @@ import {
 } from "@sqltools/types";
 import { v4 as generateId } from "uuid";
 
-type ClickHouseLib = any;
-type ClickHouseOptions = any;
-
 export default class ClickHouseDriver
-  extends AbstractDriver<ClickHouseLib, ClickHouseOptions>
-  implements IConnectionDriver {
+  extends AbstractDriver<ClickHouseClient, ClickHouseClientConfigOptions>
+  implements IConnectionDriver
+{
   queries = queries;
 
   public async open() {
@@ -24,17 +26,17 @@ export default class ClickHouseDriver
       return this.connection;
     }
 
-    let opts: ClickHouseOptions = {
-      host: this.credentials.server,
-      port: this.credentials.port,
-      user: this.credentials.username,
+    let opts: ClickHouseClientConfigOptions = {
+      host: `${this.credentials.useHTTPS ? "https:" : "http:"}://${
+        this.credentials.server
+      }:${this.credentials.port}`,
+      username: this.credentials.username,
       password: this.credentials.password,
-      protocol: this.credentials.useHTTPS ? "https:" : "http:",
-      readonly: this.credentials.readonly,
-      dataObjects: true,
+      application: "sqltools-clickhouse-driver",
+      database: this.credentials.database,
     };
 
-    this.connection = new ClickHouse(opts);
+    this.connection = Promise.resolve(createClient(opts));
     return this.connection;
   }
 
@@ -43,8 +45,7 @@ export default class ClickHouseDriver
       return Promise.resolve();
     }
 
-    // ClickHouse connection is a http client, so we can just make it null.
-    this.connection = null;
+    return (await this.connection).close();
   }
 
   public query: typeof AbstractDriver["prototype"]["query"] = async (
@@ -112,22 +113,10 @@ export default class ClickHouseDriver
 
   public async testConnection() {
     await this.open();
-
-    const db = this.credentials.database;
-    const dbFound = await this.query(
-      `SELECT name FROM system.databases WHERE name LIKE '${db}'`,
-      {}
-    );
-    if (dbFound[0].error) {
-      return Promise.reject({
-        message: `Cannot get database list: ${dbFound[0].error}`,
-      });
+    const isAlive = await (await this.connection).ping();
+    if (!isAlive) {
+      return Promise.reject("Cannot ping ClickHouse server");
     }
-    /*if (dbFound[0].results.length !== 1) {
-      return Promise.reject({
-        message: `Cannot find ${db} database: ${dbFound[0]}`,
-      });
-    }*/
     await this.close();
   }
 

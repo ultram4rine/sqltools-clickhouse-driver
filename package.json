@@ -82,7 +82,7 @@
   ],
   "main": "./out/extension.js",
   "dependencies": {
-    "@apla/clickhouse": "^1.6.4",
+    "@clickhouse/client": "^0.0.9",
     "@sqltools/base-driver": "latest",
     "@sqltools/types": "latest",
     "uuid": "^9.0.0"
