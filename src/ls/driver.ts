@@ -2,6 +2,7 @@ import {
   createClient,
   ClickHouseClient,
   ClickHouseClientConfigOptions,
+  Row,
 } from "@clickhouse/client";
 import queries from "./queries";
 import keywordsCompletion from "./keywords";
@@ -53,24 +54,29 @@ export default class ClickHouseDriver
     opt = {}
   ) => {
     return this.open().then((ch) => {
-      return new Promise<NSDatabase.IResult[]>((resolve) => {
+      return new Promise<NSDatabase.IResult[]>(async (resolve) => {
         const { requestId } = opt;
         const messages = [];
         const cols = [];
         const rows = [];
 
-        const stream = ch.query(query, {
-          queryOptions: {
-            database: this.credentials.database,
-          },
-        });
+        const stream = (
+          await ch.query({
+            query: String(query),
+            format: "JSONEachRow",
+          })
+        ).stream();
 
         stream.on("metadata", (columns) => {
           for (const col of columns) {
             cols.push(col.name);
           }
         });
-        stream.on("data", (row) => rows.push(row));
+        stream.on("data", (res: Row[]) => {
+          res.forEach((r: Row) => {
+            rows.push(r);
+          });
+        });
         stream.on("error", (err) => {
           return resolve([
             <NSDatabase.IResult>{
@@ -101,7 +107,7 @@ export default class ClickHouseDriver
               query: query,
               messages: messages.concat([
                 this.prepareMessage([
-                  `Query successfully executed. ${stream.supplemental.rows} rows were affected.`,
+                  `Query successfully executed. ${rows.length} rows were affected.`,
                 ]),
               ]),
             },
