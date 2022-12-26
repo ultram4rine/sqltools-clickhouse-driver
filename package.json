@@ -2,7 +2,7 @@
   "name": "sqltools-clickhouse-driver",
   "displayName": "SQLTools ClickHouse Driver",
   "description": "SQLTools driver for ClickHouse",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "publisher": "ultram4rine",
   "license": "MIT",
   "icon": "icon.png",
@@ -53,10 +53,24 @@
     "publish:vsce": "vsce publish --no-yarn --allow-star-activation -p $VSCE_PAT -i",
     "publish:ovsx": "ovsx publish -p $OVSX_PAT"
   },
-  "keywords": ["clickhouse", "sqltools-driver"],
-  "categories": ["Programming Languages", "Snippets", "Formatters", "Other"],
-  "extensionDependencies": ["mtxr.sqltools"],
-  "activationEvents": ["*", "onLanguage:sql", "onCommand:sqltools.*"],
+  "keywords": [
+    "clickhouse",
+    "sqltools-driver"
+  ],
+  "categories": [
+    "Programming Languages",
+    "Snippets",
+    "Formatters",
+    "Other"
+  ],
+  "extensionDependencies": [
+    "mtxr.sqltools"
+  ],
+  "activationEvents": [
+    "*",
+    "onLanguage:sql",
+    "onCommand:sqltools.*"
+  ],
   "main": "./out/extension.js",
   "dependencies": {
     "@apla/clickhouse": "^1.6.4",
