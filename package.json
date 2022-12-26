@@ -35,9 +35,9 @@
       "description": "License"
     },
     {
-      "url": "https://img.shields.io/github/workflow/status/ultram4rine/sqltools-clickhouse-driver/CI?style=flat-square",
-      "href": "https://github.com/ultram4rine/sqltools-clickhouse-driver/actions?query=workflow%3ACI",
-      "description": "GitHub Workflow Status"
+      "url": "https://img.shields.io/github/actions/workflow/status/ultram4rine/sqltools-clickhouse-driver/cicd.yaml?label=CI%2FCD&logo=github&style=flat-square",
+      "href": "https://github.com/ultram4rine/sqltools-clickhouse-driver/actions/workflows/cicd.yaml",
+      "description": "CI/CD status"
     }
   ],
   "engines": {
@@ -53,24 +53,10 @@
     "publish:vsce": "vsce publish --no-yarn --allow-star-activation -p $VSCE_PAT -i",
     "publish:ovsx": "ovsx publish -p $OVSX_PAT"
   },
-  "keywords": [
-    "clickhouse",
-    "sqltools-driver"
-  ],
-  "categories": [
-    "Programming Languages",
-    "Snippets",
-    "Formatters",
-    "Other"
-  ],
-  "extensionDependencies": [
-    "mtxr.sqltools"
-  ],
-  "activationEvents": [
-    "*",
-    "onLanguage:sql",
-    "onCommand:sqltools.*"
-  ],
+  "keywords": ["clickhouse", "sqltools-driver"],
+  "categories": ["Programming Languages", "Snippets", "Formatters", "Other"],
+  "extensionDependencies": ["mtxr.sqltools"],
+  "activationEvents": ["*", "onLanguage:sql", "onCommand:sqltools.*"],
   "main": "./out/extension.js",
   "dependencies": {
     "@apla/clickhouse": "^1.6.4",
