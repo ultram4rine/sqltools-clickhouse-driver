@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.5] - 2023-01-17
+
+### Changed
+
+- Updated dependencies.
+
+### Security
+
+- Bump `json5` to fix prototype pollution (#322).
+
 ## [0.2.4] - 2022-12-26
 
 ### Changed
