@@ -83,10 +83,10 @@
     "@types/node": "^18.11.18",
     "@types/uuid": "^9.0.0",
     "@types/vscode": "^1.42.0",
+    "@vscode/vsce": "^2.16.0",
     "esbuild": "^0.17.1",
     "ovsx": "^0.8.0",
     "rimraf": "^4.0.7",
-    "typescript": "^4.9.4",
-    "vsce": "^2.15.0"
+    "typescript": "^4.9.4"
   }
 }
