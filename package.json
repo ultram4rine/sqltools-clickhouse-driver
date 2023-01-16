@@ -44,7 +44,7 @@
     "vscode": "^1.42.0"
   },
   "scripts": {
-    "clean": "rimraf -rf out *.vsix",
+    "clean": "rimraf out *.vsix",
     "esbuild:ext": "esbuild ./src/extension.ts --bundle --external:vscode --platform=node --tsconfig=./tsconfig.json --log-level=info --color=true --format=cjs --target=es2017 --minify --outfile=./out/extension.js",
     "esbuild:ls": "esbuild ./src/ls/plugin.ts --bundle --external:vscode --platform=node --tsconfig=./tsconfig.json --log-level=info --color=true --format=cjs --target=es2017 --minify --outfile=./out/ls/plugin.js",
     "esbuild": "npm run esbuild:ext && npm run esbuild:ls",
@@ -85,7 +85,7 @@
     "@types/vscode": "^1.42.0",
     "esbuild": "^0.16.14",
     "ovsx": "^0.8.0",
-    "rimraf": "^3.0.2",
+    "rimraf": "^4.0.7",
     "typescript": "^4.9.4",
     "vsce": "^2.15.0"
   }
