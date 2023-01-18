@@ -86,7 +86,7 @@
     "@vscode/vsce": "^2.16.0",
     "esbuild": "^0.17.1",
     "ovsx": "^0.8.0",
-    "rimraf": "^4.0.7",
+    "rimraf": "^4.1.1",
     "typescript": "^4.9.4"
   }
 }
