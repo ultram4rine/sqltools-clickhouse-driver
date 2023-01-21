@@ -28,9 +28,7 @@ export default class ClickHouseDriver
     }
 
     let opts: ClickHouseClientConfigOptions = {
-      host: `${this.credentials.useHTTPS ? "https:" : "http:"}://${
-        this.credentials.server
-      }:${this.credentials.port}`,
+      host: this.credentials.host,
       username: this.credentials.username,
       password: this.credentials.password,
       application: "sqltools-clickhouse-driver",
