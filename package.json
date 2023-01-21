@@ -43,6 +43,10 @@
   "engines": {
     "vscode": "^1.42.0"
   },
+  "galleryBanner": {
+    "color": "#2F2C3A",
+    "theme": "dark"
+  },
   "scripts": {
     "clean": "rimraf out *.vsix",
     "predev": "npm run clean",
