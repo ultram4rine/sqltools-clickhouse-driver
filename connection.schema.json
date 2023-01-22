@@ -23,9 +23,8 @@
     "password": {
       "title": "Password",
       "type": "string",
-      "default": "",
-      "minLength": 1
+      "default": ""
     }
   },
-  "required": ["host", "database"]
+  "required": ["host"]
 }
