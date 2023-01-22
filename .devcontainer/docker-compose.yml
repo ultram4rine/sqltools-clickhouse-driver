@@ -23,10 +23,12 @@ services:
     user: node
 
   db:
-    image: yandex/clickhouse-server:21.3
+    image: clickhouse/clickhouse-server:22.8-alpine
     restart: unless-stopped
     volumes:
-      - clickhouse-data:/var/lib/clickhouse yandex/clickhouse-server
+      - clickhouse-data:/var/lib/clickhouse/
+      - clickhouse-logs:/var/log/clickhouse-server/
 
 volumes:
   clickhouse-data:
+  clickhouse-logs:
