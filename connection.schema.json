@@ -3,7 +3,7 @@
   "type": "object",
   "properties": {
     "host": {
-      "title": "Server",
+      "title": "Host",
       "type": "string",
       "default": "http://localhost:8123",
       "minLength": 1
