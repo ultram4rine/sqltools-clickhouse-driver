@@ -11,14 +11,12 @@
     "database": {
       "title": "Database",
       "type": "string",
-      "default": "default",
-      "minLength": 1
+      "default": "default"
     },
     "username": {
       "title": "Username",
       "type": "string",
-      "default": "default",
-      "minLength": 1
+      "default": "default"
     },
     "password": {
       "title": "Password",
