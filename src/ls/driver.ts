@@ -55,7 +55,6 @@ export default class ClickHouseDriver
       return new Promise<NSDatabase.IResult[]>(async (resolve) => {
         const { requestId } = opt;
         const messages = [];
-        const cols = [];
         const rows = [];
 
         const stream = (
@@ -65,14 +64,9 @@ export default class ClickHouseDriver
           })
         ).stream();
 
-        stream.on("metadata", (columns) => {
-          for (const col of columns) {
-            cols.push(col.name);
-          }
-        });
         stream.on("data", (res: Row[]) => {
           res.forEach((r: Row) => {
-            rows.push(r);
+            rows.push(JSON.parse(r.text));
           });
         });
         stream.on("error", (err) => {
@@ -100,7 +94,7 @@ export default class ClickHouseDriver
               requestId: requestId,
               connId: this.getId(),
               resultId: generateId(),
-              cols: cols,
+              cols: Object.keys(rows[0]),
               results: rows,
               query: query,
               messages: messages.concat([
@@ -147,14 +141,7 @@ export default class ClickHouseDriver
     switch (item.type) {
       case ContextValue.CONNECTION:
       case ContextValue.CONNECTED_CONNECTION:
-        return <NSDatabase.IDatabase[]>[
-          {
-            label: this.credentials.database,
-            database: this.credentials.database,
-            type: ContextValue.DATABASE,
-            detail: "database",
-          },
-        ];
+        return this.queryResults(this.queries.fetchDatabases());
       case ContextValue.DATABASE:
         return <MConnectionExplorer.IChildItem[]>[
           {
