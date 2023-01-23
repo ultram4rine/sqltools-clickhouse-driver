@@ -5,6 +5,7 @@ on:
     paths-ignore:
       - ".devcontainer/**"
       - ".github/dependabot.yml"
+      - ".markdownlint.json"
       - ".ncurc.json"
       - "*.md"
       - "LICENSE"
@@ -12,6 +13,7 @@ on:
     paths-ignore:
       - ".devcontainer/**"
       - ".github/dependabot.yml"
+      - ".markdownlint.json"
       - ".ncurc.json"
       - "*.md"
       - "LICENSE"
