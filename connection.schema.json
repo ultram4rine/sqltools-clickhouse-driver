@@ -2,11 +2,21 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
-    "host": {
-      "title": "Host",
+    "server": {
+      "title": "Server",
       "type": "string",
-      "default": "http://localhost:8123",
+      "default": "localhost",
       "minLength": 1
+    },
+    "port": {
+      "title": "Port",
+      "type": "integer",
+      "default": 8123
+    },
+    "useHTTPS": {
+      "title": "Use HTTPS",
+      "type": "boolean",
+      "default": false
     },
     "database": {
       "title": "Database",
@@ -24,5 +34,5 @@
       "default": ""
     }
   },
-  "required": ["host"]
+  "required": ["server"]
 }

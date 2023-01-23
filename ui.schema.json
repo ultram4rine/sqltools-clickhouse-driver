@@ -1,4 +1,11 @@
 {
-  "ui:order": ["host", "database", "username", "password"],
+  "ui:order": [
+    "server",
+    "port",
+    "useHTTPS",
+    "database",
+    "username",
+    "password"
+  ],
   "password": { "ui:widget": "password" }
 }
