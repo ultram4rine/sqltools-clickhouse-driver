@@ -96,7 +96,7 @@ export default class ClickHouseDriver
               requestId: requestId,
               connId: this.getId(),
               resultId: generateId(),
-              cols: Object.keys(rows[0]),
+              cols: rows.length === 0 ? [] : Object.keys(rows[0]),
               results: rows,
               query: query,
               messages: messages.concat([
