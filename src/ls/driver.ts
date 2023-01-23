@@ -141,7 +141,17 @@ export default class ClickHouseDriver
     switch (item.type) {
       case ContextValue.CONNECTION:
       case ContextValue.CONNECTED_CONNECTION:
-        return this.queryResults(this.queries.fetchDatabases());
+        return (await this.queryResults(this.queries.fetchDatabases())).map(
+          (d) => {
+            return {
+              ...d,
+              iconName:
+                this.credentials.database === d.label
+                  ? "database-active"
+                  : "database",
+            };
+          }
+        );
       case ContextValue.DATABASE:
         return <MConnectionExplorer.IChildItem[]>[
           {
