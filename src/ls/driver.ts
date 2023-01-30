@@ -2,7 +2,7 @@ import {
   createClient,
   ClickHouseClient,
   ClickHouseClientConfigOptions,
-  Row,
+  ResponseJSON,
 } from "@clickhouse/client";
 import queries from "./queries";
 import keywordsCompletion from "./keywords";
@@ -56,22 +56,31 @@ export default class ClickHouseDriver
     return this.open().then((ch) => {
       return new Promise<NSDatabase.IResult[]>(async (resolve) => {
         const { requestId } = opt;
-        const messages = [];
-        const rows = [];
 
-        const stream = (
-          await ch.query({
-            query: String(query),
-            format: "JSONEachRow",
-          })
-        ).stream();
+        try {
+          const result = await (
+            await ch.query({
+              query: String(query),
+              format: "JSON",
+            })
+          ).json<ResponseJSON>();
 
-        stream.on("data", (res: Row[]) => {
-          res.forEach((r: Row) => {
-            rows.push(JSON.parse(r.text));
-          });
-        });
-        stream.on("error", (err) => {
+          return resolve([
+            <NSDatabase.IResult>{
+              requestId: requestId,
+              connId: this.getId(),
+              resultId: generateId(),
+              cols: result.meta.map((v) => v.name) ?? [],
+              results: result.data,
+              query: query,
+              messages: [
+                this.prepareMessage([
+                  `Elapsed: ${result.statistics.elapsed} sec, read ${result.statistics.rows_read} rows, ${result.statistics.bytes_read} B.`,
+                ]),
+              ],
+            },
+          ]);
+        } catch (err) {
           return resolve([
             <NSDatabase.IResult>{
               requestId: requestId,
@@ -82,31 +91,14 @@ export default class ClickHouseDriver
               cols: [],
               results: [],
               query: query,
-              messages: messages.concat([
+              messages: [
                 this.prepareMessage(
                   [err.message.replace(/\n/g, " ")].filter(Boolean).join(" ")
                 ),
-              ]),
+              ],
             },
           ]);
-        });
-        stream.on("end", () => {
-          return resolve([
-            <NSDatabase.IResult>{
-              requestId: requestId,
-              connId: this.getId(),
-              resultId: generateId(),
-              cols: rows.length === 0 ? [] : Object.keys(rows[0]),
-              results: rows,
-              query: query,
-              messages: messages.concat([
-                this.prepareMessage([
-                  `Query successfully executed. ${rows.length} rows were affected.`,
-                ]),
-              ]),
-            },
-          ]);
-        });
+        }
       });
     });
   };

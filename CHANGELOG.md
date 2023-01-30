@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Show query metrics.
+
 ### Changed
 
 - Moved to [official client](https://github.com/Clickhouse/clickhouse-js).
