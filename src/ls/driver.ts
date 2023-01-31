@@ -67,12 +67,12 @@ export default class ClickHouseDriver
 
           return resolve([
             <NSDatabase.IResult>{
-              requestId: requestId,
+              requestId,
               connId: this.getId(),
               resultId: generateId(),
-              cols: result.meta.map((v) => v.name) ?? [],
+              cols: result.meta?.map((v) => v.name) ?? [],
               results: result.data,
-              query: query,
+              query,
               messages: [
                 this.prepareMessage([
                   `Elapsed: ${result.statistics.elapsed} sec, read ${result.statistics.rows_read} rows, ${result.statistics.bytes_read} B.`,
@@ -83,14 +83,14 @@ export default class ClickHouseDriver
         } catch (err) {
           return resolve([
             <NSDatabase.IResult>{
-              requestId: requestId,
+              requestId,
               connId: this.getId(),
               resultId: generateId(),
               error: true,
               rawError: err,
               cols: [],
               results: [],
-              query: query,
+              query,
               messages: [
                 this.prepareMessage(
                   [err.message.replace(/\n/g, " ")].filter(Boolean).join(" ")
