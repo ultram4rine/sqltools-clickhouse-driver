@@ -72,6 +72,7 @@ export default class ClickHouseDriver
               resultId: generateId(),
               cols: result.meta?.map((v) => v.name) ?? [],
               results: result.data,
+              pageSize: result.data.length,
               query,
               messages: [
                 this.prepareMessage([
