@@ -11,6 +11,7 @@ src/
 
 .babelrs.js
 .gitignore
+.hadolint.yaml
 .markdownlint.json
 .ncurc.json
 tsconfig.json
