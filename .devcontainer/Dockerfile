@@ -5,11 +5,13 @@ FROM mcr.microsoft.com/vscode/devcontainers/typescript-node:0-${VARIANT}
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && grep -q sse4_2 /proc/cpuinfo && echo "SSE 4.2 supported" || { echo "SSE 4.2 not supported" && exit 1; } \
-    && apt-get install -y  --no-install-recommends apt-transport-https=2.2.4 ca-certificates=20210119 dirmngr=2.2.27-2+deb11u2 \
-    && apt-key adv --keyserver keyserver.ubuntu.com --recv 8919F6BD2B48D754 \
-    && echo "deb https://packages.clickhouse.com/deb stable main" | tee /etc/apt/sources.list.d/clickhouse.list \
+    && GNUPGHOME=$(mktemp -d) \
+    && GNUPGHOME="$GNUPGHOME" gpg --no-default-keyring --keyring /usr/share/keyrings/clickhouse-keyring.gpg --keyserver keyserver.ubuntu.com --recv-keys 8919F6BD2B48D754 \
+    && rm -rf "$GNUPGHOME" \
+    && chmod +r /usr/share/keyrings/clickhouse-keyring.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/clickhouse-keyring.gpg] https://packages.clickhouse.com/deb stable main" | tee /etc/apt/sources.list.d/clickhouse.list \
     && apt-get update \
-    && apt-get install -y --no-install-recommends clickhouse-client=22.8.12.45 clickhouse-common-static=22.8.12.45 \
+    && apt-get install --yes --no-install-recommends clickhouse-client clickhouse-common-static \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
