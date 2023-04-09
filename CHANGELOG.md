@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2023-04-09
+
 ### Added
 
 - Show query metrics.
@@ -17,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Incompability with ClickHouse < 22.8 possible, according to the
   [doc](https://clickhouse.com/docs/en/integrations/language-clients/nodejs/#compatibility-with-clickhouse).
 - Use new official ClickHouse icon.
+- Updated dependencies.
 
 ### Fixed
 
