@@ -56,31 +56,51 @@ export default class ClickHouseDriver
     return this.open().then((ch) => {
       return new Promise<NSDatabase.IResult[]>(async (resolve) => {
         const { requestId } = opt;
+        const method = query.toString().startsWith("SELECT") ? "query" : "exec";
 
         try {
-          const result = await (
-            await ch.query({
-              query: String(query),
-              format: "JSON",
-            })
-          ).json<ResponseJSON>();
+          if (method === "query") {
+            const result = await (
+              await ch.query({
+                query: query.toString(),
+                format: "JSON",
+              })
+            ).json<ResponseJSON>();
 
-          return resolve([
-            <NSDatabase.IResult>{
-              requestId,
-              connId: this.getId(),
-              resultId: generateId(),
-              cols: result.meta?.map((v) => v.name) ?? [],
-              results: result.data,
-              pageSize: result.data.length,
-              query,
-              messages: [
-                this.prepareMessage([
-                  `Elapsed: ${result.statistics.elapsed} sec, read ${result.statistics.rows_read} rows, ${result.statistics.bytes_read} B.`,
-                ]),
-              ],
-            },
-          ]);
+            return resolve([
+              <NSDatabase.IResult>{
+                requestId,
+                connId: this.getId(),
+                resultId: generateId(),
+                cols: result.meta?.map((v) => v.name) ?? [],
+                results: result.data,
+                pageSize: result.data.length,
+                query,
+                messages: [
+                  this.prepareMessage([
+                    `Elapsed: ${result.statistics.elapsed} sec, read ${result.statistics.rows_read} rows, ${result.statistics.bytes_read} B.`,
+                  ]),
+                ],
+              },
+            ]);
+          } else {
+            await ch.exec({
+              query: query.toString(),
+            });
+
+            return resolve([
+              <NSDatabase.IResult>{
+                requestId,
+                connId: this.getId(),
+                resultId: generateId(),
+                cols: [],
+                results: [],
+                pageSize: 0,
+                query,
+                messages: [this.prepareMessage([`Done.`])],
+              },
+            ]);
+          }
         } catch (err) {
           return resolve([
             <NSDatabase.IResult>{
