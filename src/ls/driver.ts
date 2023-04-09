@@ -156,8 +156,8 @@ export default class ClickHouseDriver
     switch (item.type) {
       case ContextValue.CONNECTION:
       case ContextValue.CONNECTED_CONNECTION:
-        return (await this.queryResults(this.queries.fetchDatabases())).map(
-          (d) => {
+        return (await this.queryResults(this.queries.fetchDatabases()))
+          .map((d) => {
             return {
               ...d,
               iconName:
@@ -165,8 +165,14 @@ export default class ClickHouseDriver
                   ? "database-active"
                   : "database",
             };
-          }
-        );
+          })
+          .sort((x, y) => {
+            return x.label === this.credentials.database
+              ? -1
+              : y.label === this.credentials.database
+              ? 1
+              : 0;
+          });
       case ContextValue.DATABASE:
         return <MConnectionExplorer.IChildItem[]>[
           {
