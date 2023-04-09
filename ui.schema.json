@@ -2,12 +2,10 @@
   "ui:order": [
     "server",
     "port",
+    "useHTTPS",
     "database",
     "username",
-    "password",
-    "useHTTPS",
-    "readonly",
-    "queryOptions"
+    "password"
   ],
   "password": { "ui:widget": "password" }
 }

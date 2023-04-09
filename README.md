@@ -20,8 +20,9 @@ For more details see SQLTools [documentation](https://vscode-sqltools.mteixeira.
 
 ## Limits
 
-- Don't use `;` at the end of the query. Since that driver uses [@apla/clickhouse](https://www.npmjs.com/package/@apla/clickhouse)
-  library it automatically adds the `FORMAT` statement after query. In this case
-  SQLTools thinks that you are sending multiple queries, which not supported (yet).
-
-- Use `LIMIT` when selecting from table which stores more than 100 000 (about) records.
+- Don't use `FORMAT` clause. Driver already uses `JSON` format to show records
+  and statistics.
+- Don't send multiple queries, this is not supported
+  by SQLTools (yet).
+- Use `LIMIT` when selecting a large amount of data, otherwise the results may
+  take a long time to load.

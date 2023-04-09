@@ -1,4 +1,9 @@
-import ClickHouse from "@apla/clickhouse";
+import {
+  createClient,
+  ClickHouseClient,
+  ClickHouseClientConfigOptions,
+  ResponseJSON,
+} from "@clickhouse/client";
 import queries from "./queries";
 import keywordsCompletion from "./keywords";
 import AbstractDriver from "@sqltools/base-driver";
@@ -11,12 +16,10 @@ import {
 } from "@sqltools/types";
 import { v4 as generateId } from "uuid";
 
-type ClickHouseLib = any;
-type ClickHouseOptions = any;
-
 export default class ClickHouseDriver
-  extends AbstractDriver<ClickHouseLib, ClickHouseOptions>
-  implements IConnectionDriver {
+  extends AbstractDriver<ClickHouseClient, ClickHouseClientConfigOptions>
+  implements IConnectionDriver
+{
   queries = queries;
 
   public async open() {
@@ -24,17 +27,17 @@ export default class ClickHouseDriver
       return this.connection;
     }
 
-    let opts: ClickHouseOptions = {
-      host: this.credentials.server,
-      port: this.credentials.port,
-      user: this.credentials.username,
+    let opts: ClickHouseClientConfigOptions = {
+      host: `${this.credentials.useHTTPS ? "https" : "http"}://${
+        this.credentials.server
+      }:${this.credentials.port}`,
+      username: this.credentials.username,
       password: this.credentials.password,
-      protocol: this.credentials.useHTTPS ? "https:" : "http:",
-      readonly: this.credentials.readonly,
-      dataObjects: true,
+      application: "sqltools-clickhouse-driver",
+      database: this.credentials.database,
     };
 
-    this.connection = new ClickHouse(opts);
+    this.connection = Promise.resolve(createClient(opts));
     return this.connection;
   }
 
@@ -43,8 +46,7 @@ export default class ClickHouseDriver
       return Promise.resolve();
     }
 
-    // ClickHouse connection is a http client, so we can just make it null.
-    this.connection = null;
+    return (await this.connection).close();
   }
 
   public query: typeof AbstractDriver["prototype"]["query"] = async (
@@ -52,82 +54,82 @@ export default class ClickHouseDriver
     opt = {}
   ) => {
     return this.open().then((ch) => {
-      return new Promise<NSDatabase.IResult[]>((resolve) => {
+      return new Promise<NSDatabase.IResult[]>(async (resolve) => {
         const { requestId } = opt;
-        const messages = [];
-        const cols = [];
-        const rows = [];
+        const method = query.toString().startsWith("SELECT") ? "query" : "exec";
 
-        const stream = ch.query(query, {
-          queryOptions: {
-            database: this.credentials.database,
-          },
-        });
+        try {
+          if (method === "query") {
+            const result = await (
+              await ch.query({
+                query: query.toString(),
+                format: "JSON",
+              })
+            ).json<ResponseJSON>();
 
-        stream.on("metadata", (columns) => {
-          for (const col of columns) {
-            cols.push(col.name);
+            return resolve([
+              <NSDatabase.IResult>{
+                requestId,
+                connId: this.getId(),
+                resultId: generateId(),
+                cols: result.meta?.map((v) => v.name) ?? [],
+                results: result.data,
+                pageSize: result.data.length,
+                query,
+                messages: [
+                  this.prepareMessage([
+                    `Elapsed: ${result.statistics.elapsed} sec, read ${result.statistics.rows_read} rows, ${result.statistics.bytes_read} B.`,
+                  ]),
+                ],
+              },
+            ]);
+          } else {
+            await ch.exec({
+              query: query.toString(),
+            });
+
+            return resolve([
+              <NSDatabase.IResult>{
+                requestId,
+                connId: this.getId(),
+                resultId: generateId(),
+                cols: [],
+                results: [],
+                pageSize: 0,
+                query,
+                messages: [this.prepareMessage([`Done.`])],
+              },
+            ]);
           }
-        });
-        stream.on("data", (row) => rows.push(row));
-        stream.on("error", (err) => {
+        } catch (err) {
           return resolve([
             <NSDatabase.IResult>{
-              requestId: requestId,
+              requestId,
               connId: this.getId(),
               resultId: generateId(),
               error: true,
               rawError: err,
               cols: [],
               results: [],
-              query: query,
-              messages: messages.concat([
+              query,
+              messages: [
                 this.prepareMessage(
                   [err.message.replace(/\n/g, " ")].filter(Boolean).join(" ")
                 ),
-              ]),
+              ],
             },
           ]);
-        });
-        stream.on("end", () => {
-          return resolve([
-            <NSDatabase.IResult>{
-              requestId: requestId,
-              connId: this.getId(),
-              resultId: generateId(),
-              cols: cols,
-              results: rows,
-              query: query,
-              messages: messages.concat([
-                this.prepareMessage([
-                  `Query successfully executed. ${stream.supplemental.rows} rows were affected.`,
-                ]),
-              ]),
-            },
-          ]);
-        });
+        }
       });
     });
   };
 
   public async testConnection() {
     await this.open();
-
-    const db = this.credentials.database;
-    const dbFound = await this.query(
-      `SELECT name FROM system.databases WHERE name LIKE '${db}'`,
-      {}
-    );
-    if (dbFound[0].error) {
-      return Promise.reject({
-        message: `Cannot get database list: ${dbFound[0].error}`,
-      });
+    const isAlive = await (await this.connection).ping();
+    if (!isAlive) {
+      return Promise.reject("Cannot ping ClickHouse server");
     }
-    /*if (dbFound[0].results.length !== 1) {
-      return Promise.reject({
-        message: `Cannot find ${db} database: ${dbFound[0]}`,
-      });
-    }*/
     await this.close();
   }
 
@@ -154,14 +156,23 @@ export default class ClickHouseDriver
     switch (item.type) {
       case ContextValue.CONNECTION:
       case ContextValue.CONNECTED_CONNECTION:
-        return <NSDatabase.IDatabase[]>[
-          {
-            label: this.credentials.database,
-            database: this.credentials.database,
-            type: ContextValue.DATABASE,
-            detail: "database",
-          },
-        ];
+        return (await this.queryResults(this.queries.fetchDatabases()))
+          .map((d) => {
+            return {
+              ...d,
+              iconName:
+                this.credentials.database === d.label
+                  ? "database-active"
+                  : "database",
+            };
+          })
+          .sort((x, y) => {
+            return x.label === this.credentials.database
+              ? -1
+              : y.label === this.credentials.database
+              ? 1
+              : 0;
+          });
       case ContextValue.DATABASE:
         return <MConnectionExplorer.IChildItem[]>[
           {

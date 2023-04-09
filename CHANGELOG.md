@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Show query metrics.
+
+### Changed
+
+- Moved to [official client](https://github.com/Clickhouse/clickhouse-js).
+  Incompability with ClickHouse < 22.8 possible, according to the
+  [doc](https://clickhouse.com/docs/en/integrations/language-clients/nodejs/#compatibility-with-clickhouse).
+- Use new official ClickHouse icon.
+
+### Fixed
+
+- Correctly display page size.
+
 ## [0.2.5] - 2023-01-17
 
 ### Changed

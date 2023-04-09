@@ -6,10 +6,7 @@ import {
 } from "@sqltools/types";
 import { ExtensionContext } from "vscode";
 import { DRIVER_ALIASES } from "./constants";
-const { publisher, name } = require("../package.json");
-// import { workspace } from 'vscode';
-// import { Uri } from 'vscode';
-// import path from 'path';
+import { publisher, name } from "../package.json";
 
 const driverName = "ClickHouse Driver";
 

@@ -28,6 +28,15 @@ SELECT count(1) AS total
 FROM ${(p) => p.table.label || p.table}
 `;
 
+const fetchDatabases: IBaseQueries["fetchDatabases"] = queryFactory`
+SELECT d.name AS label,
+  d.name AS database,
+  '${ContextValue.DATABASE}' AS type,
+  'database' AS detail
+FROM system.databases AS d
+ORDER BY d.name
+`;
+
 const fetchTables: IBaseQueries["fetchTables"] = queryFactory`
 SELECT t.name AS label,
   t.database AS database,
@@ -87,6 +96,7 @@ export default {
   countRecords,
   fetchColumns,
   fetchRecords,
+  fetchDatabases,
   fetchTables,
   fetchViews,
   searchTables,
