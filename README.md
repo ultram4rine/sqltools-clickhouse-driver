@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/github/license/ultram4rine/sqltools-clickhouse-driver?style=flat-square)](https://github.com/ultram4rine/sqltools-clickhouse-driver/blob/master/LICENSE)
 [![CI/CD](https://img.shields.io/github/actions/workflow/status/ultram4rine/sqltools-clickhouse-driver/cicd.yaml?label=CI%2FCD&logo=github&style=flat-square)](https://github.com/ultram4rine/sqltools-clickhouse-driver/actions/workflows/cicd.yaml)
 
-[ClickHouse](https://clickhouse.tech/) driver for
+[ClickHouse](https://clickhouse.com/) driver for
 [SQLTools](https://vscode-sqltools.mteixeira.dev/) VS Code extension.
 
 ## Installation
@@ -20,6 +20,9 @@ For more details see SQLTools [documentation](https://vscode-sqltools.mteixeira.
 
 ## Limits
 
+- According to the [doc](https://clickhouse.com/docs/en/integrations/language-clients/nodejs#compatibility-with-clickhouse)
+  of official nodejs client, this extension should be compatible with ClickHouse
+  version `22.8` and above.
 - Don't use `FORMAT` clause. Driver already uses `JSON` format to show records
   and statistics.
 - Don't send multiple queries, this is not supported
