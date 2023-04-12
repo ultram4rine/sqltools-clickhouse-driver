@@ -56,7 +56,11 @@ export default class ClickHouseDriver
     return this.open().then((ch) => {
       return new Promise<NSDatabase.IResult[]>(async (resolve) => {
         const { requestId } = opt;
-        const method = query.toString().startsWith("SELECT") ? "query" : "exec";
+        const queryStart = query.toString().trimStart().toUpperCase();
+        const method =
+          queryStart.startsWith("SELECT") || queryStart.startsWith("WITH")
+            ? "query"
+            : "exec";
 
         try {
           if (method === "query") {
