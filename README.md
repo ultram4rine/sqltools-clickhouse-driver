@@ -12,6 +12,7 @@
 
 - Directly from VS Code by searching `@tag:sqltools clickhouse` or just `clickhouse`;
 - From [marketplace](https://marketplace.visualstudio.com/items/ultram4rine.sqltools-clickhouse-driver).
+- Download `vsix` from [releases](https://github.com/ultram4rine/sqltools-clickhouse-driver/releases/latest).
 
 ## Usage
 
