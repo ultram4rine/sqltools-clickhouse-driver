@@ -58,7 +58,9 @@ export default class ClickHouseDriver
         const { requestId } = opt;
         const queryStart = query.toString().trimStart().toUpperCase();
         const method =
-          queryStart.startsWith("SELECT") || queryStart.startsWith("WITH")
+          queryStart.startsWith("SELECT") ||
+          queryStart.startsWith("SHOW") ||
+          queryStart.startsWith("WITH")
             ? "query"
             : "exec";
 
