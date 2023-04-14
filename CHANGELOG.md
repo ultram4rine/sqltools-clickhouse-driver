@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Moved to [official client](https://github.com/Clickhouse/clickhouse-js).
-  Incompability with ClickHouse < 22.8 possible, according to the
+  Incompatibility with ClickHouse < 22.8 possible, according to the
   [doc](https://clickhouse.com/docs/en/integrations/language-clients/nodejs/#compatibility-with-clickhouse).
 - Use new official ClickHouse icon.
 - Updated dependencies.
