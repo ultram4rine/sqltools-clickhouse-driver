@@ -93,7 +93,7 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.21.4",
-    "@types/node": "^18.15.11",
+    "@types/node": "^20.1.2",
     "@types/uuid": "^9.0.1",
     "@types/vscode": "^1.42.0",
     "@vscode/vsce": "2.19.0",
