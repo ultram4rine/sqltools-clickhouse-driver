@@ -1,11 +1,10 @@
+import { readFileSync } from "fs";
 import {
   createClient,
   ClickHouseClient,
   ClickHouseClientConfigOptions,
   ResponseJSON,
 } from "@clickhouse/client";
-import queries from "./queries";
-import keywordsCompletion from "./keywords";
 import AbstractDriver from "@sqltools/base-driver";
 import {
   IConnectionDriver,
@@ -15,6 +14,9 @@ import {
   Arg0,
 } from "@sqltools/types";
 import { v4 as generateId } from "uuid";
+
+import queries from "./queries";
+import keywordsCompletion from "./keywords";
 
 export default class ClickHouseDriver
   extends AbstractDriver<ClickHouseClient, ClickHouseClientConfigOptions>
@@ -27,6 +29,23 @@ export default class ClickHouseDriver
       return this.connection;
     }
 
+    // If all three files provided, create mutual TLS configuration,
+    // else if only CA file provided, create basic TLS configuration.
+    const tlsConfig =
+      this.credentials.tls.ca_cert &&
+      this.credentials.tls.cert &&
+      this.credentials.tls.key
+        ? {
+            ca_cert: readFileSync(this.credentials.tls.ca_cert),
+            cert: readFileSync(this.credentials.tls.cert),
+            key: readFileSync(this.credentials.tls.key),
+          }
+        : this.credentials.tls.ca_cert
+        ? {
+            ca_cert: readFileSync(this.credentials.tls.ca_cert),
+          }
+        : undefined;
+
     let opts: ClickHouseClientConfigOptions = {
       host: `${this.credentials.useHTTPS ? "https" : "http"}://${
         this.credentials.server
@@ -35,6 +54,7 @@ export default class ClickHouseDriver
       password: this.credentials.password,
       application: "sqltools-clickhouse-driver",
       database: this.credentials.database,
+      tls: tlsConfig,
     };
 
     this.connection = Promise.resolve(createClient(opts));
