@@ -32,6 +32,31 @@
       "title": "Password",
       "type": "string",
       "default": ""
+    },
+    "tls": {
+      "title": "TLS configuration",
+      "type": "object",
+      "properties": {
+        "ca_cert": {
+          "title": "CA Cert",
+          "type": ["string", "null"],
+          "format": "data-url"
+        },
+        "cert": {
+          "title": "Cert",
+          "type": ["string", "null"],
+          "format": "data-url"
+        },
+        "key": {
+          "title": "Key",
+          "type": ["string", "null"],
+          "format": "data-url"
+        }
+      },
+      "dependencies": {
+        "cert": ["ca_cert", "key"],
+        "key": ["ca_cert", "cert"]
+      }
     }
   },
   "required": ["server"]

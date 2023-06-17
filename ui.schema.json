@@ -5,7 +5,13 @@
     "useHTTPS",
     "database",
     "username",
-    "password"
+    "password",
+    "tls"
   ],
-  "password": { "ui:widget": "password" }
+  "password": { "ui:widget": "password" },
+  "tls": {
+    "ca_cert": { "ui:widget": "file", "ui:emptyValue": null },
+    "cert": { "ui:widget": "file", "ui:emptyValue": null },
+    "key": { "ui:widget": "file", "ui:emptyValue": null }
+  }
 }
