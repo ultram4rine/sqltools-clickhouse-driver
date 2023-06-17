@@ -44,7 +44,7 @@
     "vscode": "^1.42.0"
   },
   "galleryBanner": {
-    "color": "#2F2C3A",
+    "color": "#151515",
     "theme": "dark"
   },
   "scripts": {
