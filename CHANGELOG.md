@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2023-06-17
+
+### Added
+
+- Added TLS configuration option in connection schema.
+
+### Changed
+
+- Change icons and colors to match new ClickHouse design.
+
 ## [0.3.1] - 2023-04-14
 
 ### Fixed

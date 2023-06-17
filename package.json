@@ -2,7 +2,7 @@
   "name": "sqltools-clickhouse-driver",
   "displayName": "SQLTools ClickHouse Driver",
   "description": "SQLTools driver for ClickHouse",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "publisher": "ultram4rine",
   "license": "MIT",
   "icon": "icon.png",
