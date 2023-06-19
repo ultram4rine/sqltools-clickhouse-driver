@@ -32,6 +32,7 @@ export default class ClickHouseDriver
     // If all three files provided, create mutual TLS configuration,
     // else if only CA file provided, create basic TLS configuration.
     const tlsConfig =
+      this.credentials.tls &&
       this.credentials.tls.ca_cert &&
       this.credentials.tls.cert &&
       this.credentials.tls.key
@@ -40,7 +41,7 @@ export default class ClickHouseDriver
             cert: readFileSync(this.credentials.tls.cert),
             key: readFileSync(this.credentials.tls.key),
           }
-        : this.credentials.tls.ca_cert
+        : this.credentials.tls && this.credentials.tls.ca_cert
         ? {
             ca_cert: readFileSync(this.credentials.tls.ca_cert),
           }
@@ -69,7 +70,7 @@ export default class ClickHouseDriver
     return (await this.connection).close();
   }
 
-  public query: typeof AbstractDriver["prototype"]["query"] = async (
+  public query: (typeof AbstractDriver)["prototype"]["query"] = async (
     query,
     opt = {}
   ) => {
