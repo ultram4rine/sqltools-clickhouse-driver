@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix `Show Table Records` and `Describe Table` explorer commands.
+
 ## [0.4.1] - 2023-06-20
 
 ### Fixed
