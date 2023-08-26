@@ -2,9 +2,9 @@ import { readFileSync } from "fs";
 import {
   createClient,
   ClickHouseClient,
-  ClickHouseClientConfigOptions,
   ResponseJSON,
 } from "@clickhouse/client";
+import { NodeClickHouseClientConfigOptions } from "@clickhouse/client/dist/client";
 import AbstractDriver from "@sqltools/base-driver";
 import {
   IConnectionDriver,
@@ -19,7 +19,7 @@ import queries from "./queries";
 import keywordsCompletion from "./keywords";
 
 export default class ClickHouseDriver
-  extends AbstractDriver<ClickHouseClient, ClickHouseClientConfigOptions>
+  extends AbstractDriver<ClickHouseClient, NodeClickHouseClientConfigOptions>
   implements IConnectionDriver
 {
   queries = queries;
@@ -47,7 +47,7 @@ export default class ClickHouseDriver
           }
         : undefined;
 
-    let opts: ClickHouseClientConfigOptions = {
+    let opts: NodeClickHouseClientConfigOptions = {
       host: `${this.credentials.useHTTPS ? "https" : "http"}://${
         this.credentials.server
       }:${this.credentials.port}`,
@@ -83,7 +83,7 @@ export default class ClickHouseDriver
           queryStart.startsWith("SHOW") ||
           queryStart.startsWith("WITH")
             ? "query"
-            : "exec";
+            : "command";
 
         try {
           if (method === "query") {
@@ -111,7 +111,7 @@ export default class ClickHouseDriver
               },
             ]);
           } else {
-            await ch.exec({
+            await ch.command({
               query: query.toString(),
             });
 
@@ -153,9 +153,12 @@ export default class ClickHouseDriver
 
   public async testConnection() {
     await this.open();
-    const isAlive = await (await this.connection).ping();
-    if (!isAlive) {
-      return Promise.reject("Cannot ping ClickHouse server");
+    const pingResult = await (await this.connection).ping();
+    if (!pingResult.success) {
+      if ("error" in pingResult) {
+        return Promise.reject(pingResult.error);
+      }
+      return Promise.reject("Can't ping ClickHouse server");
     }
     await this.close();
   }
