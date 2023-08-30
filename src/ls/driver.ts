@@ -81,7 +81,8 @@ export default class ClickHouseDriver
         const method =
           queryStart.startsWith("SELECT") ||
           queryStart.startsWith("SHOW") ||
-          queryStart.startsWith("WITH")
+          queryStart.startsWith("WITH") ||
+          queryStart.startsWith("DESC")
             ? "query"
             : "command";
 
