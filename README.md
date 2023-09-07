@@ -21,7 +21,7 @@ For more details see SQLTools [documentation](https://vscode-sqltools.mteixeira.
 
 ## Limits
 
-- According to the [doc](https://clickhouse.com/docs/en/integrations/language-clients/nodejs#compatibility-with-clickhouse)
+- According to the [docs]([https://clickhouse.com/docs/en/integrations/language-clients/nodejs#compatibility-with-clickhouse](https://clickhouse.com/docs/en/integrations/language-clients/javascript#compatibility-with-clickhouse))
   of official nodejs client, this extension should be compatible with ClickHouse
   version `22.8` and above.
 - Don't use `FORMAT` clause. Driver already uses `JSON` format to show records
