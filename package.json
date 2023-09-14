@@ -99,7 +99,7 @@
     "@vscode/vsce": "2.21.0",
     "concurrently": "^8.2.1",
     "cross-env": "^7.0.3",
-    "esbuild": "^0.19.2",
+    "esbuild": "^0.19.3",
     "ovsx": "^0.8.3",
     "rimraf": "^5.0.1",
     "typescript": "^5.2.2"
