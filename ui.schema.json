@@ -5,6 +5,7 @@
     "useHTTPS",
     "database",
     "username",
+    "passwordMode",
     "password",
     "tls"
   ],

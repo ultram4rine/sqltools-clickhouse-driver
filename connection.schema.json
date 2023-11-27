@@ -28,6 +28,12 @@
       "type": "string",
       "default": "default"
     },
+    "passwordMode": {
+      "title": "Password mode",
+      "type": "string",
+      "enum": ["SQLTools Driver Credentials", "Save as plaintext in settings"],
+      "default": "SQLTools Driver Credentials"
+    },
     "password": {
       "title": "Password",
       "type": "string",
