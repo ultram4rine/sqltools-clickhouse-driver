@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added possibility to use `sqltools-driver-credentials` authentication provider
+  to store password.
+
 ## [0.4.2] - 2023-08-31
 
 ### Fixed
