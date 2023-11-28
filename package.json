@@ -101,7 +101,7 @@
     "cross-env": "^7.0.3",
     "esbuild": "^0.19.8",
     "ovsx": "^0.8.3",
-    "rimraf": "^5.0.1",
+    "rimraf": "^5.0.5",
     "typescript": "^5.2.2"
   }
 }
