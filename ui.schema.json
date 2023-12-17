@@ -7,12 +7,13 @@
     "username",
     "passwordMode",
     "password",
+    "enableTls",
     "tls"
   ],
   "password": { "ui:widget": "password" },
   "tls": {
-    "ca_cert": { "ui:widget": "file", "ui:emptyValue": null },
-    "cert": { "ui:widget": "file", "ui:emptyValue": null },
-    "key": { "ui:widget": "file", "ui:emptyValue": null }
+    "ca_cert": { "ui:widget": "file" },
+    "cert": { "ui:widget": "file" },
+    "key": { "ui:widget": "file" }
   }
 }
