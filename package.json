@@ -86,22 +86,22 @@
   ],
   "main": "./out/extension.js",
   "dependencies": {
-    "@clickhouse/client": "^0.2.1",
+    "@clickhouse/client": "^0.2.7",
     "@sqltools/base-driver": "latest",
     "@sqltools/types": "latest",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.23.3",
-    "@types/node": "^20.10.0",
+    "@babel/preset-env": "^7.23.6",
+    "@types/node": "^20.10.5",
     "@types/uuid": "^9.0.7",
     "@types/vscode": "^1.42.0",
-    "@vscode/vsce": "2.21.0",
-    "concurrently": "^8.2.1",
+    "@vscode/vsce": "2.22.0",
+    "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
-    "esbuild": "^0.19.8",
+    "esbuild": "^0.19.10",
     "ovsx": "^0.8.3",
-    "rimraf": "^5.0.1",
-    "typescript": "^5.2.2"
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3"
   }
 }

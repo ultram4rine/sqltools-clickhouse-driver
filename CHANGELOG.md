@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Refactor TLS options in connection schema.
+- Updated dependencies.
 
 ## [0.4.2] - 2023-08-31
 
