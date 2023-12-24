@@ -9,8 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added possibility to use `sqltools-driver-credentials` authentication provider
-  to store password.
+- Added `passwordMode` property to connection schema. It can be set to use `sqltools-driver-credentials` authentication provider.
+
+### Changed
+
+- Refactor TLS options in connection schema.
 
 ## [0.4.2] - 2023-08-31
 
