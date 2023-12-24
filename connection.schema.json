@@ -1,6 +1,35 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
+  "definitions": {
+    "password": {
+      "title": "Password",
+      "type": "string",
+      "default": ""
+    },
+    "tls": {
+      "title": "TLS configuration",
+      "type": "object",
+      "properties": {
+        "ca_cert": {
+          "title": "CA Cert",
+          "type": "string"
+        },
+        "cert": {
+          "title": "Cert",
+          "type": "string"
+        },
+        "key": {
+          "title": "Key",
+          "type": "string"
+        }
+      },
+      "dependencies": {
+        "cert": ["ca_cert", "key"],
+        "key": ["ca_cert", "cert"]
+      }
+    }
+  },
   "properties": {
     "server": {
       "title": "Server",
@@ -28,35 +57,80 @@
       "type": "string",
       "default": "default"
     },
-    "password": {
-      "title": "Password",
+    "passwordMode": {
+      "title": "Password mode",
       "type": "string",
-      "default": ""
+      "enum": [
+        "SQLTools Driver Credentials",
+        "Ask on connect",
+        "Use empty password",
+        "Save as plaintext in settings"
+      ],
+      "default": "SQLTools Driver Credentials"
     },
-    "tls": {
-      "title": "TLS configuration",
-      "type": "object",
-      "properties": {
-        "ca_cert": {
-          "title": "CA Cert",
-          "type": ["string", "null"],
-          "format": "data-url"
+    "enableTls": {
+      "type": "boolean",
+      "title": "Enable TLS",
+      "default": false
+    }
+  },
+  "dependencies": {
+    "passwordMode": {
+      "oneOf": [
+        {
+          "properties": {
+            "passwordMode": {
+              "enum": ["SQLTools Driver Credentials"]
+            }
+          }
         },
-        "cert": {
-          "title": "Cert",
-          "type": ["string", "null"],
-          "format": "data-url"
+        {
+          "properties": {
+            "passwordMode": {
+              "enum": ["Ask on connect"]
+            }
+          }
         },
-        "key": {
-          "title": "Key",
-          "type": ["string", "null"],
-          "format": "data-url"
+        {
+          "properties": {
+            "passwordMode": {
+              "enum": ["Use empty password"]
+            }
+          }
+        },
+        {
+          "properties": {
+            "passwordMode": {
+              "enum": ["Save as plaintext in settings"]
+            },
+            "password": {
+              "$ref": "#/definitions/password"
+            }
+          },
+          "required": ["password"]
         }
-      },
-      "dependencies": {
-        "cert": ["ca_cert", "key"],
-        "key": ["ca_cert", "cert"]
-      }
+      ]
+    },
+    "enableTls": {
+      "oneOf": [
+        {
+          "properties": {
+            "enableTls": {
+              "enum": [false]
+            }
+          }
+        },
+        {
+          "properties": {
+            "enableTls": {
+              "enum": [true]
+            },
+            "tls": {
+              "$ref": "#/definitions/tls"
+            }
+          }
+        }
+      ]
     }
   },
   "required": ["server"]
