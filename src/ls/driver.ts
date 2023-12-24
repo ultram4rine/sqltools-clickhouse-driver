@@ -32,6 +32,7 @@ export default class ClickHouseDriver
     // If all three files provided, create mutual TLS configuration,
     // else if only CA file provided, create basic TLS configuration.
     const tlsConfig =
+      this.credentials.enableTls &&
       this.credentials.tls &&
       this.credentials.tls.ca_cert &&
       this.credentials.tls.cert &&
@@ -41,7 +42,9 @@ export default class ClickHouseDriver
             cert: readFileSync(this.credentials.tls.cert),
             key: readFileSync(this.credentials.tls.key),
           }
-        : this.credentials.tls && this.credentials.tls.ca_cert
+        : this.credentials.enableTls &&
+          this.credentials.tls &&
+          this.credentials.tls.ca_cert
         ? {
             ca_cert: readFileSync(this.credentials.tls.ca_cert),
           }
