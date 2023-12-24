@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added `passwordMode` property to connection schema. It can be set to use `sqltools-driver-credentials` authentication provider.
+- Added `passwordMode` property to connection schema. It can be set to use
+  `sqltools-driver-credentials` authentication provider.
 
 ### Changed
 
