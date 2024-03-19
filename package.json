@@ -86,7 +86,7 @@
   ],
   "main": "./out/extension.js",
   "dependencies": {
-    "@clickhouse/client": "^0.2.7",
+    "@clickhouse/client": "^0.3.0",
     "@sqltools/base-driver": "latest",
     "@sqltools/types": "latest",
     "uuid": "^9.0.1"
