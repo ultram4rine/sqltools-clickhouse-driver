@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Updated dependencies.
+- Updated dependencies. As `@clickhouse/client` is `v1.0.0` now, incompatibility
+  with ClickHouse < 23.3 is possible, according to the [doc](https://clickhouse.com/docs/en/integrations/language-clients/javascript#compatibility-with-clickhouse).
 
 ## [0.5.0] - 2023-12-24
 

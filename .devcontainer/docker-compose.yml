@@ -23,7 +23,7 @@ services:
     user: node
 
   db:
-    image: clickhouse/clickhouse-server:22.8-alpine
+    image: clickhouse/clickhouse-server:23.3-alpine
     restart: unless-stopped
     volumes:
       - clickhouse-data:/var/lib/clickhouse/
