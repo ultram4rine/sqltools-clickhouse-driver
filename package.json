@@ -100,7 +100,7 @@
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
     "esbuild": "^0.19.10",
-    "ovsx": "^0.8.3",
+    "ovsx": "^0.9.1",
     "rimraf": "^5.0.5",
     "typescript": "^5.3.3"
   }
