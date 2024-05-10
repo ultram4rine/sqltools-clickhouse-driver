@@ -3,8 +3,8 @@ import {
   createClient,
   ClickHouseClient,
   ResponseJSON,
+  ClickHouseClientConfigOptions,
 } from "@clickhouse/client";
-import { NodeClickHouseClientConfigOptions } from "@clickhouse/client/dist/client";
 import AbstractDriver from "@sqltools/base-driver";
 import {
   IConnectionDriver,
@@ -19,7 +19,7 @@ import queries from "./queries";
 import keywordsCompletion from "./keywords";
 
 export default class ClickHouseDriver
-  extends AbstractDriver<ClickHouseClient, NodeClickHouseClientConfigOptions>
+  extends AbstractDriver<ClickHouseClient, ClickHouseClientConfigOptions>
   implements IConnectionDriver
 {
   queries = queries;
@@ -50,8 +50,8 @@ export default class ClickHouseDriver
           }
         : undefined;
 
-    let opts: NodeClickHouseClientConfigOptions = {
-      host: `${this.credentials.useHTTPS ? "https" : "http"}://${
+    const opts = {
+      url: `${this.credentials.useHTTPS ? "https" : "http"}://${
         this.credentials.server
       }:${this.credentials.port}`,
       username: this.credentials.username,
@@ -60,7 +60,7 @@ export default class ClickHouseDriver
       database: this.credentials.database,
       tls: tlsConfig,
       // TODO: check clickhouse_settings.default_format: "JSON"
-    };
+    } as ClickHouseClientConfigOptions;
 
     this.connection = Promise.resolve(createClient(opts));
     return this.connection;
