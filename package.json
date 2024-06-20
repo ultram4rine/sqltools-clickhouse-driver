@@ -96,7 +96,7 @@
     "@types/node": ">=20",
     "@types/uuid": "^9.0.8",
     "@types/vscode": "^1.42.0",
-    "@vscode/vsce": "2.27.0",
+    "@vscode/vsce": "2.29.0",
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
     "esbuild": "^0.21.4",
