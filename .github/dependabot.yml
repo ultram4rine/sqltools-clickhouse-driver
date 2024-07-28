@@ -13,5 +13,8 @@ updates:
       - dependency-name: "@types/vscode"
     groups:
       app-deps:
+        applies-to: version-updates
         patterns:
           - "*"
+        exclude-patterns:
+          - "@clickhouse/client"
