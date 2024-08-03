@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated dependencies. As `@clickhouse/client` is `v1.0.0` now, incompatibility
   with ClickHouse < 23.3 is possible, according to the [doc](https://clickhouse.com/docs/en/integrations/language-clients/javascript#compatibility-with-clickhouse).
 
+### Fixed
+
+- Fix work with tables with special characters in name (#544).
+
 ## [0.5.0] - 2023-12-24
 
 ### Added
