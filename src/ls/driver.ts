@@ -253,6 +253,22 @@ export default class ClickHouseDriver
     return [];
   }
 
+  public async getInsertQuery(params: {
+    item: NSDatabase.ITable;
+    columns: Array<NSDatabase.IColumn>;
+  }) {
+    const { item, columns } = params;
+    let insertQuery = `INSERT INTO ${item.database}.\`${item.label}\` (${columns
+      .map((col) => col.label)
+      .join(", ")}) VALUES (`;
+    columns.forEach((col, index) => {
+      insertQuery = insertQuery.concat(
+        `'\${${index + 1}:${col.label}:${col.dataType}}', `
+      );
+    });
+    return insertQuery;
+  }
+
   /**
    * This method is a helper for intellisense and quick picks.
    */
