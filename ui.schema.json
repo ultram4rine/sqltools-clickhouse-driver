@@ -2,11 +2,12 @@
   "ui:order": [
     "server",
     "port",
-    "useHTTPS",
     "database",
     "username",
     "passwordMode",
     "password",
+    "requestTimeout",
+    "useHTTPS",
     "enableTls",
     "tls"
   ],

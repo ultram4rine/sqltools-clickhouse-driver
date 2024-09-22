@@ -42,11 +42,6 @@
       "type": "integer",
       "default": 8123
     },
-    "useHTTPS": {
-      "title": "Use HTTPS",
-      "type": "boolean",
-      "default": false
-    },
     "database": {
       "title": "Database",
       "type": "string",
@@ -67,6 +62,16 @@
         "Save as plaintext in settings"
       ],
       "default": "SQLTools Driver Credentials"
+    },
+    "requestTimeout": {
+      "title": "Request timeout in milliseconds",
+      "type": "integer",
+      "default": 30000
+    },
+    "useHTTPS": {
+      "title": "Use HTTPS",
+      "type": "boolean",
+      "default": false
     },
     "enableTls": {
       "type": "boolean",
