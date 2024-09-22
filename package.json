@@ -92,16 +92,16 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.25.0",
+    "@babel/preset-env": "^7.25.4",
     "@types/node": ">=22",
     "@types/uuid": "^10.0.0",
     "@types/vscode": "^1.42.0",
-    "@vscode/vsce": "2.31.1",
-    "concurrently": "^8.2.2",
+    "@vscode/vsce": "3.1.0",
+    "concurrently": "^9.0.1",
     "cross-env": "^7.0.3",
-    "esbuild": "^0.23.0",
-    "ovsx": "^0.9.2",
+    "esbuild": "^0.23.1",
+    "ovsx": "^0.9.4",
     "rimraf": "^6.0.1",
-    "typescript": "^5.5.4"
+    "typescript": "^5.6.2"
   }
 }
