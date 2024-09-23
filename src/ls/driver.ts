@@ -55,7 +55,8 @@ export default class ClickHouseDriver
       server = "http://" + server;
     }
 
-    const url = new URL(server + ":" + this.credentials.port);
+    const url = new URL(server);
+    url.port = this.credentials.port.toString();
 
     const opts = {
       url: url,
