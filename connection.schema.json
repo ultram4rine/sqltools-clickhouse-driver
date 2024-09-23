@@ -34,6 +34,7 @@
     "server": {
       "title": "Server",
       "type": "string",
+      "format": "uri",
       "default": "http://localhost",
       "minLength": 1
     },

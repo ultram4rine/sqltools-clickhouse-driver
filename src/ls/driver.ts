@@ -51,7 +51,7 @@ export default class ClickHouseDriver
         : undefined;
 
     let server = this.credentials.server;
-    if (!server.startsWith("http://") || !server.startsWith("https://")) {
+    if (!server.startsWith("http://") && !server.startsWith("https://")) {
       server = "http://" + server;
     }
 

@@ -63,7 +63,7 @@ export async function activate(
       const propsToRemove = ["passwordMode"];
 
       if (
-        !connInfo.server.startsWith("http://") ||
+        !connInfo.server.startsWith("http://") &&
         !connInfo.server.startsWith("https://")
       ) {
         connInfo.server = "http://" + connInfo.server;
@@ -100,7 +100,7 @@ export async function activate(
       };
 
       if (
-        !connInfo.server.startsWith("http://") ||
+        !connInfo.server.startsWith("http://") &&
         !connInfo.server.startsWith("https://")
       ) {
         formData.server = "http://" + connInfo.server;
