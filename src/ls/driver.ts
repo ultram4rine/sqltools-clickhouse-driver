@@ -56,6 +56,7 @@ export default class ClickHouseDriver
       }:${this.credentials.port}`,
       username: this.credentials.username,
       password: this.credentials.password,
+      request_timeout: this.credentials.requestTimeout,
       application: "sqltools-clickhouse-driver",
       database: this.credentials.database,
       tls: tlsConfig,

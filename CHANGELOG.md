@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add request timeout option (#632).
+
+### Changed
+
+- Updated dependencies.
+
 ## [0.6.0] - 2024-08-03
 
 ### Changed
