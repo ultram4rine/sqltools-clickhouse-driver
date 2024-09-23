@@ -34,7 +34,7 @@
     "server": {
       "title": "Server",
       "type": "string",
-      "default": "localhost",
+      "default": "http://localhost",
       "minLength": 1
     },
     "port": {
@@ -67,11 +67,6 @@
       "title": "Request timeout in milliseconds",
       "type": "integer",
       "default": 30000
-    },
-    "useHTTPS": {
-      "title": "Use HTTPS",
-      "type": "boolean",
-      "default": false
     },
     "enableTls": {
       "type": "boolean",

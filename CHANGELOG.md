@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Update connection schema, removed `useHTTPS` option. If you need a `HTTPS` connection,
+  specify it in server, e.g. `https://node01.clickhouse.cloud` (#634).
 - Updated dependencies.
 
 ## [0.6.0] - 2024-08-03

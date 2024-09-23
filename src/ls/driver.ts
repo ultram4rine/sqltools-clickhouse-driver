@@ -50,10 +50,15 @@ export default class ClickHouseDriver
           }
         : undefined;
 
+    let server = this.credentials.server;
+    if (!server.startsWith("http://") || !server.startsWith("https://")) {
+      server = "http://" + server;
+    }
+
+    const url = new URL(server + ":" + this.credentials.port);
+
     const opts = {
-      url: `${this.credentials.useHTTPS ? "https" : "http"}://${
-        this.credentials.server
-      }:${this.credentials.port}`,
+      url: url,
       username: this.credentials.username,
       password: this.credentials.password,
       request_timeout: this.credentials.requestTimeout,

@@ -7,10 +7,10 @@
     "passwordMode",
     "password",
     "requestTimeout",
-    "useHTTPS",
     "enableTls",
     "tls"
   ],
+  "server": { "ui:widget": "url" },
   "password": { "ui:widget": "password" },
   "tls": {
     "ca_cert": { "ui:widget": "file" },
