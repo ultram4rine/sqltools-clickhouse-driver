@@ -62,7 +62,7 @@
         "Use empty password",
         "Save as plaintext in settings"
       ],
-      "default": "SQLTools Driver Credentials"
+      "default": "Use empty password"
     },
     "requestTimeout": {
       "title": "Request timeout in milliseconds",
