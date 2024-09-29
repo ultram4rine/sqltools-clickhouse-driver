@@ -66,7 +66,6 @@ export default class ClickHouseDriver
       application: "sqltools-clickhouse-driver",
       database: this.credentials.database,
       tls: tlsConfig,
-      // TODO: check clickhouse_settings.default_format: "JSON"
     } as ClickHouseClientConfigOptions;
 
     this.connection = Promise.resolve(createClient(opts));
