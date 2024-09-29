@@ -50,17 +50,22 @@ export default class ClickHouseDriver
           }
         : undefined;
 
+    let server = this.credentials.server;
+    if (!server.startsWith("http://") && !server.startsWith("https://")) {
+      server = "http://" + server;
+    }
+
+    const url = new URL(server);
+    url.port = this.credentials.port.toString();
+
     const opts = {
-      url: `${this.credentials.useHTTPS ? "https" : "http"}://${
-        this.credentials.server
-      }:${this.credentials.port}`,
+      url: url,
       username: this.credentials.username,
       password: this.credentials.password,
       request_timeout: this.credentials.requestTimeout,
       application: "sqltools-clickhouse-driver",
       database: this.credentials.database,
       tls: tlsConfig,
-      // TODO: check clickhouse_settings.default_format: "JSON"
     } as ClickHouseClientConfigOptions;
 
     this.connection = Promise.resolve(createClient(opts));

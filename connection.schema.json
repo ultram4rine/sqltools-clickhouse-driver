@@ -34,7 +34,8 @@
     "server": {
       "title": "Server",
       "type": "string",
-      "default": "localhost",
+      "format": "uri",
+      "default": "http://localhost",
       "minLength": 1
     },
     "port": {
@@ -61,17 +62,12 @@
         "Use empty password",
         "Save as plaintext in settings"
       ],
-      "default": "SQLTools Driver Credentials"
+      "default": "Use empty password"
     },
     "requestTimeout": {
       "title": "Request timeout in milliseconds",
       "type": "integer",
       "default": 30000
-    },
-    "useHTTPS": {
-      "title": "Use HTTPS",
-      "type": "boolean",
-      "default": false
     },
     "enableTls": {
       "type": "boolean",

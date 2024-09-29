@@ -62,6 +62,13 @@ export async function activate(
     parseBeforeSaveConnection: ({ connInfo }) => {
       const propsToRemove = ["passwordMode"];
 
+      if (
+        !connInfo.server.startsWith("http://") &&
+        !connInfo.server.startsWith("https://")
+      ) {
+        connInfo.server = "http://" + connInfo.server;
+      }
+
       if (connInfo.passwordMode) {
         if (connInfo.passwordMode.toString().toLowerCase().includes("ask")) {
           connInfo.askForPassword = true;
@@ -91,6 +98,13 @@ export async function activate(
       const formData: typeof connInfo = {
         ...connInfo,
       };
+
+      if (
+        !connInfo.server.startsWith("http://") &&
+        !connInfo.server.startsWith("https://")
+      ) {
+        formData.server = "http://" + connInfo.server;
+      }
 
       if (connInfo.askForPassword) {
         formData.passwordMode = "Ask on connect";
