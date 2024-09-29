@@ -28,5 +28,3 @@ For more details see SQLTools [documentation](https://vscode-sqltools.mteixeira.
   and statistics.
 - Don't send multiple queries, this is not supported
   by SQLTools (yet).
-- Use `LIMIT` when selecting a large amount of data, otherwise the results may
-  take a long time to load.
