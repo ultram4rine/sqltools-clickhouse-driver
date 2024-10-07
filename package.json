@@ -92,11 +92,11 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.25.4",
+    "@babel/preset-env": "^7.25.7",
     "@types/node": ">=22",
     "@types/uuid": "^10.0.0",
     "@types/vscode": "^1.42.0",
-    "@vscode/vsce": "3.1.0",
+    "@vscode/vsce": "3.1.1",
     "concurrently": "^9.0.1",
     "cross-env": "^7.0.3",
     "esbuild": "^0.24.0",
