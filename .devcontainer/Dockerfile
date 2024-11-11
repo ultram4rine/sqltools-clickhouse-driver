@@ -1,7 +1,6 @@
-# [Choice] Node.js version (use -bullseye variants on local arm64/Apple Silicon): 18, 16, 14, 18-bullseye, 16-bullseye, 14-bullseye, 18-buster, 16-buster, 14-buster
-ARG VARIANT=16-bullseye
-FROM mcr.microsoft.com/vscode/devcontainers/typescript-node:0-${VARIANT}
+FROM mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm
 
+# [Optional] Uncomment this section to install additional OS packages.
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && grep -q sse4_2 /proc/cpuinfo && echo "SSE 4.2 supported" || { echo "SSE 4.2 not supported" && exit 1; } \
@@ -19,5 +18,5 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 # ARG EXTRA_NODE_VERSION=10
 # RUN su node -c "source /usr/local/share/nvm/nvm.sh && nvm install ${EXTRA_NODE_VERSION}"
 
-# [Optional] Uncomment if you want to install more global node packages
+# [Optional] Uncomment if you want to install more global node modules
 RUN su node -c "npm install -g typescript npm-check-updates"
