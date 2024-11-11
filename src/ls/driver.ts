@@ -62,6 +62,7 @@ export default class ClickHouseDriver
       url: url,
       username: this.credentials.username,
       password: this.credentials.password,
+      role: this.credentials.role,
       request_timeout: this.credentials.requestTimeout,
       application: "sqltools-clickhouse-driver",
       database: this.credentials.database,

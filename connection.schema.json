@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
+  "required": ["server", "port", "passwordMode"],
   "definitions": {
     "password": {
       "title": "Password",
@@ -63,6 +64,10 @@
         "Save as plaintext in settings"
       ],
       "default": "Use empty password"
+    },
+    "role": {
+      "title": "Role",
+      "type": "string"
     },
     "requestTimeout": {
       "title": "Request timeout in milliseconds",
@@ -133,6 +138,5 @@
         }
       ]
     }
-  },
-  "required": ["server"]
+  }
 }
