@@ -6,11 +6,15 @@
     "username",
     "passwordMode",
     "password",
+    "role",
     "requestTimeout",
     "enableTls",
     "tls"
   ],
   "password": { "ui:widget": "password" },
+  "role": {
+    "ui:description": "See https://clickhouse.com/docs/en/interfaces/http#setting-role-with-query-parameters."
+  },
   "tls": {
     "ca_cert": { "ui:widget": "file" },
     "cert": { "ui:widget": "file" },

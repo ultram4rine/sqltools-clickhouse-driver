@@ -64,6 +64,10 @@
       ],
       "default": "Use empty password"
     },
+    "role": {
+      "title": "Role",
+      "type": "string"
+    },
     "requestTimeout": {
       "title": "Request timeout in milliseconds",
       "type": "integer",

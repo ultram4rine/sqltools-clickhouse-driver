@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `role` parameter (#644). Read more [here](https://clickhouse.com/docs/en/interfaces/http#setting-role-with-query-parameters).
+
 ## [0.7.0] - 2024-09-29
 
 ### Added
