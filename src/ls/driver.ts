@@ -90,94 +90,104 @@ export default class ClickHouseDriver
     query,
     opt = {}
   ) => {
-    return this.open().then((ch) => {
-      return new Promise<NSDatabase.IResult[]>(async (resolve) => {
-        const { requestId } = opt;
-        const queryStart = query.toString().trimStart().toUpperCase();
-        const method =
-          queryStart.startsWith("SELECT") ||
-          queryStart.startsWith("SHOW") ||
-          queryStart.startsWith("WITH") ||
-          queryStart.startsWith("DESC")
-            ? "query"
-            : "command";
+    const ch = await this.open();
 
-        try {
-          if (method === "query") {
-            const result = await (
-              await ch.query({
-                query: query.toString(),
-                format: "JSON",
-              })
-            ).json<ResponseJSON>();
+    return new Promise<NSDatabase.IResult[]>(async (resolve) => {
+      const { requestId } = opt;
+      const queryStart = query.toString().trimStart().toUpperCase();
+      const method =
+        queryStart.startsWith("SELECT") ||
+        queryStart.startsWith("SHOW") ||
+        queryStart.startsWith("WITH") ||
+        queryStart.startsWith("DESC")
+          ? "query"
+          : "command";
 
-            return resolve([
-              <NSDatabase.IResult>{
-                requestId,
-                connId: this.getId(),
-                resultId: generateId(),
-                cols: result.meta?.map((v) => v.name) ?? [],
-                results: result.data,
-                pageSize: result.data.length,
-                query,
-                messages: [
-                  this.prepareMessage([
-                    `Elapsed: ${result.statistics.elapsed} sec, read ${result.statistics.rows_read} rows, ${result.statistics.bytes_read} B.`,
-                  ]),
-                ],
-              },
-            ]);
-          } else {
-            await ch.command({
+      try {
+        if (method === "query") {
+          const result = await (
+            await ch.query({
               query: query.toString(),
-            });
+              format: "JSON",
+            })
+          ).json<ResponseJSON>();
 
-            return resolve([
-              <NSDatabase.IResult>{
-                requestId,
-                connId: this.getId(),
-                resultId: generateId(),
-                cols: [],
-                results: [],
-                pageSize: 0,
-                query,
-                messages: [this.prepareMessage([`Done.`])],
-              },
-            ]);
-          }
-        } catch (err) {
           return resolve([
             <NSDatabase.IResult>{
               requestId,
               connId: this.getId(),
               resultId: generateId(),
-              error: true,
-              rawError: err,
-              cols: [],
-              results: [],
+              cols: result.meta?.map((v) => v.name) ?? [],
+              results: result.data,
+              pageSize: result.data.length,
               query,
               messages: [
-                this.prepareMessage(
-                  [err.message.replace(/\n/g, " ")].filter(Boolean).join(" ")
-                ),
+                this.prepareMessage([
+                  `Elapsed: ${result.statistics.elapsed} sec, read ${result.statistics.rows_read} rows, ${result.statistics.bytes_read} B.`,
+                ]),
               ],
             },
           ]);
+        } else {
+          await ch.command({
+            query: query.toString(),
+          });
+
+          return resolve([
+            <NSDatabase.IResult>{
+              requestId,
+              connId: this.getId(),
+              resultId: generateId(),
+              cols: [],
+              results: [],
+              pageSize: 0,
+              query,
+              messages: [this.prepareMessage([`Done.`])],
+            },
+          ]);
         }
-      });
+      } catch (err) {
+        return resolve([
+          <NSDatabase.IResult>{
+            requestId,
+            connId: this.getId(),
+            resultId: generateId(),
+            error: true,
+            rawError: err,
+            cols: [],
+            results: [],
+            query,
+            messages: [
+              this.prepareMessage(
+                [err.message.replace(/\n/g, " ")].filter(Boolean).join(" ")
+              ),
+            ],
+          },
+        ]);
+      }
     });
   };
 
   public async testConnection() {
-    await this.open();
-    const pingResult = await (await this.connection).ping();
-    if (!pingResult.success) {
-      if ("error" in pingResult) {
-        return Promise.reject(pingResult.error);
+    try {
+      const ch = await this.open();
+
+      // Try ping
+      const pingResult = await ch.ping();
+      if (!pingResult.success) {
+        throw "Failed to ping ClickHouse server";
       }
-      return Promise.reject("Can't ping ClickHouse server");
+
+      // Try "select 1"
+      await ch.query({
+        query: "SELECT 1",
+        format: "JSON",
+      });
+    } catch (err) {
+      return Promise.reject(err);
+    } finally {
+      await this.close();
     }
-    await this.close();
   }
 
   private async getColumns(
