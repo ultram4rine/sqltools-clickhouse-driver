@@ -3,6 +3,7 @@
     "server",
     "port",
     "database",
+    "useJWT",
     "username",
     "passwordMode",
     "password",
@@ -12,6 +13,9 @@
     "tls"
   ],
   "password": { "ui:widget": "password" },
+  "useJWT": {
+    "ui:help": "This is a ClickHouse Cloud feature. Put token in password field"
+  },
   "role": {
     "ui:help": "Only for ClickHouse >=24.4! See https://clickhouse.com/docs/en/interfaces/http#setting-role-with-query-parameters"
   },

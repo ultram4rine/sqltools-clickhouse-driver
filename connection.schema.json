@@ -49,10 +49,10 @@
       "type": "string",
       "default": "default"
     },
-    "username": {
-      "title": "Username",
-      "type": "string",
-      "default": "default"
+    "useJWT": {
+      "type": "boolean",
+      "title": "Use JWT token instead of password",
+      "default": false
     },
     "passwordMode": {
       "title": "Password mode",
@@ -114,6 +114,29 @@
             }
           },
           "required": ["password"]
+        }
+      ]
+    },
+    "useJWT": {
+      "oneOf": [
+        {
+          "properties": {
+            "useJWT": {
+              "enum": [false]
+            },
+            "username": {
+              "title": "Username",
+              "type": "string",
+              "default": "default"
+            }
+          }
+        },
+        {
+          "properties": {
+            "useJWT": {
+              "enum": [true]
+            }
+          }
         }
       ]
     },
