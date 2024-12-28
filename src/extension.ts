@@ -69,6 +69,10 @@ export async function activate(
         connInfo.server = "http://" + connInfo.server;
       }
 
+      if (connInfo.useJWT) {
+        propsToRemove.push("username");
+      }
+
       if (connInfo.passwordMode) {
         if (connInfo.passwordMode.toString().toLowerCase().includes("ask")) {
           connInfo.askForPassword = true;

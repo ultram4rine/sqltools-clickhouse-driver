@@ -60,14 +60,19 @@ export default class ClickHouseDriver
 
     const opts = {
       url: url,
-      username: this.credentials.username,
-      password: this.credentials.password,
       role: this.credentials.role,
       request_timeout: this.credentials.requestTimeout,
       application: "sqltools-clickhouse-driver",
       database: this.credentials.database,
       tls: tlsConfig,
     } as ClickHouseClientConfigOptions;
+
+    if (this.credentials.useJWT) {
+      opts.access_token = this.credentials.password;
+    } else {
+      opts.username = this.credentials.username;
+      opts.password = this.credentials.password;
+    }
 
     this.connection = Promise.resolve(createClient(opts));
     return this.connection;

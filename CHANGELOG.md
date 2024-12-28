@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `JWT` auth option (#656). This is a ClickHouse Cloud feature.
+
+### Changed
+
+- Improved connection test (#655).
+- Updated dependencies.
+
 ## [0.8.0] - 2024-11-11
 
 ### Added
