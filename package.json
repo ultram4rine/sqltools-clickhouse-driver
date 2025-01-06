@@ -89,7 +89,7 @@
     "@clickhouse/client": "^1.10.0",
     "@sqltools/base-driver": "latest",
     "@sqltools/types": "latest",
-    "uuid": "^11.0.3"
+    "uuid": "^11.0.4"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.26.0",
@@ -97,7 +97,7 @@
     "@types/uuid": "^10.0.0",
     "@types/vscode": "^1.42.0",
     "@vscode/vsce": "3.2.1",
-    "concurrently": "^9.1.1",
+    "concurrently": "^9.1.2",
     "cross-env": "^7.0.3",
     "esbuild": "^0.24.2",
     "ovsx": "^0.10.1",
