@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix empty result when query starts with comment (#681).
+
 ## [0.9.0] - 2024-12-31
 
 ### Added
