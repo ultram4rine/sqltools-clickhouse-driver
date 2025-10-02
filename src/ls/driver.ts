@@ -129,6 +129,7 @@ export default class ClickHouseDriver
           line.startsWith("DESC")
             ? "query"
             : "command";
+        break;
       }
 
       try {
