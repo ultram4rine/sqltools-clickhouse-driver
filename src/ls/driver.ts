@@ -244,9 +244,16 @@ export default class ClickHouseDriver
             iconId: "folder",
             childType: ContextValue.VIEW,
           },
+          {
+            label: "Materialized Views",
+            type: ContextValue.RESOURCE_GROUP,
+            iconId: "folder",
+            childType: ContextValue.MATERIALIZED_VIEW,
+          },
         ];
       case ContextValue.TABLE:
       case ContextValue.VIEW:
+      case ContextValue.MATERIALIZED_VIEW:
         return this.getColumns(item as NSDatabase.ITable);
       case ContextValue.RESOURCE_GROUP:
         return this.getChildrenForGroup({ item, parent });
@@ -270,6 +277,10 @@ export default class ClickHouseDriver
       case ContextValue.VIEW:
         return this.queryResults(
           this.queries.fetchViews(parent as NSDatabase.ISchema)
+        );
+      case ContextValue.MATERIALIZED_VIEW:
+        return this.queryResults(
+          this.queries.fetchMaterializedViews(parent as NSDatabase.ISchema)
         );
     }
     return [];
