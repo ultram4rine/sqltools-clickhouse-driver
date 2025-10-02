@@ -94,14 +94,42 @@ export default class ClickHouseDriver
 
     return new Promise<NSDatabase.IResult[]>(async (resolve) => {
       const { requestId } = opt;
-      const queryStart = query.toString().trimStart().toUpperCase();
-      const method =
-        queryStart.startsWith("SELECT") ||
-        queryStart.startsWith("SHOW") ||
-        queryStart.startsWith("WITH") ||
-        queryStart.startsWith("DESC")
-          ? "query"
-          : "command";
+
+      // Handle comments https://clickhouse.com/docs/sql-reference/syntax#comments
+      const queryLines = query
+        .toString()
+        .trimStart()
+        .toUpperCase()
+        .split(/\r?\n/);
+
+      let method: "query" | "command" = "command";
+      let inComment = false;
+      for (const line of queryLines) {
+        if (
+          line.startsWith("--") ||
+          line.startsWith("#!") ||
+          line.startsWith("#")
+        ) {
+          continue;
+        }
+        if (line.startsWith("/*")) {
+          inComment = true;
+        }
+        if (line.includes("*/")) {
+          inComment = false;
+        }
+        if (inComment) {
+          continue;
+        }
+
+        method =
+          line.startsWith("SELECT") ||
+          line.startsWith("SHOW") ||
+          line.startsWith("WITH") ||
+          line.startsWith("DESC")
+            ? "query"
+            : "command";
+      }
 
       try {
         if (method === "query") {
