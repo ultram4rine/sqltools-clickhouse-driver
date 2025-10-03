@@ -1,5 +1,6 @@
 {
   "ui:order": [
+    "connectionMethod",
     "server",
     "port",
     "database",
@@ -10,7 +11,9 @@
     "role",
     "requestTimeout",
     "enableTls",
-    "tls"
+    "tls",
+    "ssh",
+    "sshOptions"
   ],
   "password": { "ui:widget": "password" },
   "useJWT": {
@@ -23,5 +26,8 @@
     "ca_cert": { "ui:widget": "file" },
     "cert": { "ui:widget": "file" },
     "key": { "ui:widget": "file" }
+  },
+  "sshOptions": {
+    "password": { "ui:widget": "password" }
   }
 }

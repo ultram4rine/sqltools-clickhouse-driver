@@ -29,6 +29,32 @@ export default class ClickHouseDriver
       return this.connection;
     }
 
+    let server = this.credentials.server;
+    if (!server.startsWith("http://") && !server.startsWith("https://")) {
+      server = "http://" + server;
+    }
+
+    const url = new URL(this.credentials.server);
+    url.port = this.credentials.port.toString();
+
+    if (this.credentials.ssh === "Enabled" && this.credentials.sshOptions) {
+      const { port: localPort } = await this.createSshTunnel(
+        {
+          host: this.credentials.sshOptions.host,
+          port: this.credentials.sshOptions.port,
+          username: this.credentials.sshOptions.username,
+          password: this.credentials.sshOptions.password,
+          privateKeyPath: this.credentials.sshOptions.privateKeyPath,
+        },
+        {
+          host: this.credentials.server.replace(/(^\w+:|^)\/\//, ""),
+          port: this.credentials.port,
+        }
+      );
+      url.hostname = "localhost";
+      url.port = localPort.toString();
+    }
+
     // If all three files provided, create mutual TLS configuration,
     // else if only CA file provided, create basic TLS configuration.
     const tlsConfig =
@@ -49,14 +75,6 @@ export default class ClickHouseDriver
             ca_cert: readFileSync(this.credentials.tls.ca_cert),
           }
         : undefined;
-
-    let server = this.credentials.server;
-    if (!server.startsWith("http://") && !server.startsWith("https://")) {
-      server = "http://" + server;
-    }
-
-    const url = new URL(server);
-    url.port = this.credentials.port.toString();
 
     const opts = {
       url: url,
