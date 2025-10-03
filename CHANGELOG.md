@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improve meta in explorer (#682).
 
+### Fixed
+
+- Fix empty result when query starts with comment (#681).
+
 ## [0.9.0] - 2024-12-31
 
 ### Added
@@ -30,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add `role` parameter (#644). Read more [here](https://clickhouse.com/docs/en/interfaces/http#setting-role-with-query-parameters).
+- Add `role` parameter (#644). Read more in [documentation](https://clickhouse.com/docs/en/interfaces/http#setting-role-with-query-parameters).
   This feature added in ClickHouse 24.4, older versions will throw an error.
 
 ### Changed

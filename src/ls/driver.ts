@@ -94,12 +94,19 @@ export default class ClickHouseDriver
 
     return new Promise<NSDatabase.IResult[]>(async (resolve) => {
       const { requestId } = opt;
-      const queryStart = query.toString().trimStart().toUpperCase();
+
+      // Handle comments https://clickhouse.com/docs/sql-reference/syntax#comments
+      const onlyQuery = query
+        .toString()
+        .replace(/(?:^--.*?$)|(?:^#.*?$)|(?:\/\*(?:[^*]|\*(?!\/))*\*\/)/gm, "")
+        .trimStart()
+        .toUpperCase();
+
       const method =
-        queryStart.startsWith("SELECT") ||
-        queryStart.startsWith("SHOW") ||
-        queryStart.startsWith("WITH") ||
-        queryStart.startsWith("DESC")
+        onlyQuery.startsWith("SELECT") ||
+        onlyQuery.startsWith("SHOW") ||
+        onlyQuery.startsWith("WITH") ||
+        onlyQuery.startsWith("DESC")
           ? "query"
           : "command";
 
