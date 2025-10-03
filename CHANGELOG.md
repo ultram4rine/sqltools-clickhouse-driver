@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Show materialized views in explorer (#682).
+
+### Changed
+
+- Improve meta in explorer (#682).
+
 ### Fixed
 
 - Fix empty result when query starts with comment (#681).

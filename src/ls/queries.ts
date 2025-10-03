@@ -32,7 +32,7 @@ const fetchDatabases: IBaseQueries["fetchDatabases"] = queryFactory`
 SELECT d.name AS label,
   d.name AS database,
   '${ContextValue.DATABASE}' AS type,
-  'database' AS detail
+  d.engine AS detail
 FROM system.databases AS d
 ORDER BY d.name
 `;
@@ -40,19 +40,33 @@ ORDER BY d.name
 const fetchTables: IBaseQueries["fetchTables"] = queryFactory`
 SELECT t.name AS label,
   t.database AS database,
-  '${ContextValue.TABLE}' AS type
+  '${ContextValue.TABLE}' AS type,
+  false AS isView,
+  t.engine AS detail
 FROM system.tables AS t
 WHERE t.database == '${(p) => p.database}'
   AND t.engine != 'View'
+  AND t.engine != 'MaterializedView'
 ORDER BY t.name
 `;
 const fetchViews: IBaseQueries["fetchTables"] = queryFactory`
 SELECT t.name AS label,
   t.database AS database,
-  '${ContextValue.VIEW}' AS type
+  '${ContextValue.VIEW}' AS type,
+  true AS isView
 FROM system.tables AS t
 WHERE t.database == '${(p) => p.database}'
   AND t.engine == 'View'
+ORDER BY t.name
+`;
+const fetchMaterializedViews: IBaseQueries["fetchTables"] = queryFactory`
+SELECT t.name AS label,
+  t.database AS database,
+  '${ContextValue.MATERIALIZED_VIEW}' AS type,
+  'view' AS iconName
+FROM system.tables AS t
+WHERE t.database == '${(p) => p.database}'
+  AND t.engine == 'MaterializedView'
 ORDER BY t.name
 `;
 
@@ -99,6 +113,7 @@ export default {
   fetchDatabases,
   fetchTables,
   fetchViews,
+  fetchMaterializedViews,
   searchTables,
   searchColumns,
 };
