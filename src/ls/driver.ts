@@ -239,16 +239,16 @@ export default class ClickHouseDriver
             childType: ContextValue.TABLE,
           },
           {
-            label: "Views",
-            type: ContextValue.RESOURCE_GROUP,
-            iconId: "folder",
-            childType: ContextValue.VIEW,
-          },
-          {
             label: "Materialized Views",
             type: ContextValue.RESOURCE_GROUP,
             iconId: "folder",
             childType: ContextValue.MATERIALIZED_VIEW,
+          },
+          {
+            label: "Views",
+            type: ContextValue.RESOURCE_GROUP,
+            iconId: "folder",
+            childType: ContextValue.VIEW,
           },
         ];
       case ContextValue.TABLE:
