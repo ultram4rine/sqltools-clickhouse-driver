@@ -96,41 +96,19 @@ export default class ClickHouseDriver
       const { requestId } = opt;
 
       // Handle comments https://clickhouse.com/docs/sql-reference/syntax#comments
-      const queryLines = query
+      const onlyQuery = query
         .toString()
+        .replace(/(?:^--.*?$)|(?:^#.*?$)|(?:\/\*(?:[^*]|\*(?!\/))*\*\/)/gm, "")
         .trimStart()
-        .toUpperCase()
-        .split(/\r?\n/);
+        .toUpperCase();
 
-      let method: "query" | "command" = "command";
-      let inComment = false;
-      for (const line of queryLines) {
-        if (
-          line.startsWith("--") ||
-          line.startsWith("#!") ||
-          line.startsWith("#")
-        ) {
-          continue;
-        }
-        if (line.startsWith("/*")) {
-          inComment = true;
-        }
-        if (line.includes("*/")) {
-          inComment = false;
-        }
-        if (inComment) {
-          continue;
-        }
-
-        method =
-          line.startsWith("SELECT") ||
-          line.startsWith("SHOW") ||
-          line.startsWith("WITH") ||
-          line.startsWith("DESC")
-            ? "query"
-            : "command";
-        break;
-      }
+      const method =
+        onlyQuery.startsWith("SELECT") ||
+        onlyQuery.startsWith("SHOW") ||
+        onlyQuery.startsWith("WITH") ||
+        onlyQuery.startsWith("DESC")
+          ? "query"
+          : "command";
 
       try {
         if (method === "query") {
