@@ -15,9 +15,10 @@ SELECT name AS label,
   c.type AS dataType,
   c.default_expression AS defaultValue,
   '${ContextValue.COLUMN}' AS type,
+  c.is_in_partition_key AS isPartitionKey,
   c.is_in_primary_key AS isPk
 FROM system.columns AS c
-WHERE c.table == '${(p) => p.label}'
+WHERE c.database == '${(p) => p.database}' AND c.table == '${(p) => p.label}'
 ORDER BY c.position ASC
 `;
 
