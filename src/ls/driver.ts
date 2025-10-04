@@ -318,8 +318,14 @@ export default class ClickHouseDriver
     extraParams: any = {}
   ): Promise<NSDatabase.SearchableItem[]> {
     switch (itemType) {
+      case ContextValue.DATABASE:
+        return this.queryResults(
+          this.queries.searchDatabases({ search, ...extraParams })
+        );
       case ContextValue.TABLE:
-        return this.queryResults(this.queries.searchTables({ search }));
+        return this.queryResults(
+          this.queries.searchTables({ search, ...extraParams })
+        );
       case ContextValue.COLUMN:
         return this.queryResults(
           this.queries.searchColumns({ search, ...extraParams })
