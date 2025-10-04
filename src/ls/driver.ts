@@ -16,7 +16,6 @@ import {
 import { v4 as generateId } from "uuid";
 
 import queries from "./queries";
-import keywordsCompletion from "./keywords";
 
 export default class ClickHouseDriver
   extends AbstractDriver<ClickHouseClient, ClickHouseClientConfigOptions>
@@ -343,7 +342,7 @@ export default class ClickHouseDriver
     }
 
     try {
-      this.completionsCache = keywordsCompletion;
+      this.completionsCache = {};
 
       const keywords = await this.queryResults(
         "SELECT keyword AS label FROM system.keywords ORDER BY keyword ASC"
@@ -423,8 +422,7 @@ export default class ClickHouseDriver
         }
       );
     } catch (error) {
-      // use default reserved words
-      this.completionsCache = keywordsCompletion;
+      this.completionsCache = {};
     }
 
     return this.completionsCache;
