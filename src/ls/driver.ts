@@ -345,25 +345,83 @@ export default class ClickHouseDriver
     try {
       this.completionsCache = keywordsCompletion;
 
+      const keywords = await this.queryResults(
+        "SELECT keyword AS label FROM system.keywords ORDER BY keyword ASC"
+      );
       const functions = await this.queryResults(
-        "SELECT name AS label FROM system.functions ORDER BY name ASC"
+        "SELECT name AS label, is_aggregate, case_insensitive, alias_to AS alias, description AS desc, syntax, examples, categories FROM system.functions ORDER BY name ASC"
       );
       const dataTypes = await this.queryResults(
-        "SELECT name AS label, alias_to AS desc FROM system.data_type_families ORDER BY name ASC"
+        "SELECT name AS label, case_insensitive, alias_to AS alias FROM system.data_type_families ORDER BY name ASC"
       );
 
-      functions.concat(dataTypes).forEach((item: any) => {
+      keywords.forEach((item: { label: string }) => {
         this.completionsCache[item.label] = {
           label: item.label,
           detail: item.label,
           filterText: item.label,
           sortText: "" + item.label,
           documentation: {
-            value: `\`\`\`yaml\nWORD: ${item.label}\nTYPE: ${item.desc}\n\`\`\``,
             kind: "markdown",
+            value: `\`\`\`yaml\nWORD: ${item.label}\nTYPE: keyword\n\`\`\``,
           },
         };
       });
+
+      functions.forEach(
+        (item: {
+          label: string;
+          is_aggregate: number;
+          case_insensitive: number;
+          alias: string;
+          description: string;
+          syntax: string;
+          examples: string;
+          categories: string;
+        }) => {
+          this.completionsCache[item.label] = {
+            label: item.label,
+            detail: item.label,
+            filterText: item.label,
+            sortText: "" + item.label,
+            documentation: {
+              kind: "markdown",
+              value: `\`\`\`\`yaml\nWORD: ${
+                item.label
+              }\nTYPE: function\nCase insensitive: ${!!item.case_insensitive}\n${
+                item.alias ? `Alias: ${item.alias}\n` : ""
+              }Is aggregate: ${!!item.is_aggregate}\n${
+                item.description ? `Description: ${item.description}\n` : ""
+              }${item.categories ? `Categories: ${item.categories}\n` : ""}${
+                item.syntax ? `Syntax: ${item.syntax}\n` : ""
+              }${
+                item.examples
+                  ? `Examples:\n\`\`\`\`\n\n${item.examples}\n`
+                  : "````"
+              }`,
+            },
+          };
+        }
+      );
+
+      dataTypes.forEach(
+        (item: { label: string; case_insensitive: number; alias: string }) => {
+          this.completionsCache[item.label] = {
+            label: item.label,
+            detail: item.label,
+            filterText: item.label,
+            sortText: "" + item.label,
+            documentation: {
+              kind: "markdown",
+              value: `\`\`\`yaml\nWORD: ${
+                item.label
+              }\nTYPE: data type\nCase insensitive: ${!!item.case_insensitive}\n${
+                item.alias ? `Alias: ${item.alias}` : ""
+              }\n\`\`\``,
+            },
+          };
+        }
+      );
     } catch (error) {
       // use default reserved words
       this.completionsCache = keywordsCompletion;
