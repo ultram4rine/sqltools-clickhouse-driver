@@ -1,4 +1,9 @@
-import { IBaseQueries, ContextValue } from "@sqltools/types";
+import {
+  IBaseQueries,
+  ContextValue,
+  QueryBuilder,
+  NSDatabase,
+} from "@sqltools/types";
 import queryFactory from "@sqltools/base-driver/dist/lib/factory";
 
 const describeTable: IBaseQueries["describeTable"] = queryFactory`
@@ -10,9 +15,10 @@ SELECT name AS label,
   c.type AS dataType,
   c.default_expression AS defaultValue,
   '${ContextValue.COLUMN}' AS type,
+  c.is_in_partition_key AS isPartitionKey,
   c.is_in_primary_key AS isPk
 FROM system.columns AS c
-WHERE c.table == '${(p) => p.label}'
+WHERE c.database == '${(p) => p.database}' AND c.table == '${(p) => p.label}'
 ORDER BY c.position ASC
 `;
 
@@ -70,14 +76,34 @@ WHERE t.database == '${(p) => p.database}'
 ORDER BY t.name
 `;
 
+const searchDatabases: QueryBuilder<
+  { search: string; limit?: number },
+  NSDatabase.IDatabase
+> = queryFactory`
+SELECT d.name AS label,
+  '${ContextValue.DATABASE}' AS type
+FROM system.databases AS d
+WHERE d.name NOT IN ('INFORMATION_SCHEMA', 'information_schema', 'system')
+  ${(p) => (p.search ? `AND d.name ILIKE '%${p.search}%'` : "")}
+ORDER BY d.name
+${(p) => (p.limit ? `LIMIT ${p.limit}` : "")}
+`;
 const searchTables: IBaseQueries["searchTables"] = queryFactory`
 SELECT t.name AS label,
   t.database AS database,
-  '${ContextValue.TABLE}' AS type
+  if(t.engine in ('View', 'MaterializedView'), true, false) AS isView,
+  if(t.engine = 'View',
+    '${ContextValue.VIEW}',
+    if(t.engine = 'MaterializedView',
+      '${ContextValue.MATERIALIZED_VIEW}',
+      '${ContextValue.TABLE}'
+    )
+  ) AS type
 FROM system.tables AS t
-WHERE t.database NOT IN ('_temporary_and_external_tables', 'default', 'system')
+WHERE t.database NOT IN ('INFORMATION_SCHEMA', 'information_schema', 'system')
   ${(p) => (p.search ? `AND t.name ILIKE '%${p.search}%'` : "")}
 ORDER BY t.name
+${(p) => (p.limit ? `LIMIT ${p.limit}` : "")}
 `;
 const searchColumns: IBaseQueries["searchColumns"] = queryFactory`
 SELECT c.name AS label,
@@ -86,10 +112,10 @@ SELECT c.name AS label,
   c.type AS dataType,
   '${ContextValue.COLUMN}' as type
 FROM system.columns AS c
-WHERE c.database NOT IN ('_temporary_and_external_tables', 'default', 'system')
+WHERE c.database NOT IN ('INFORMATION_SCHEMA', 'information_schema', 'system')
   ${(p) =>
     p.tables.filter((t) => !!t.label).length
-      ? `AND LOWER(c.table) IN (${p.tables
+      ? `AND lower(c.table) IN (${p.tables
           .filter((t) => !!t.label)
           .map((t) => `'${t.label}'`.toLowerCase())
           .join(", ")})`
@@ -97,8 +123,8 @@ WHERE c.database NOT IN ('_temporary_and_external_tables', 'default', 'system')
 ${(p) =>
   p.search
     ? `AND (
-    (C.TABLE_NAME || '.' || C.COLUMN_NAME) ILIKE '%${p.search}%'
-    OR C.COLUMN_NAME ILIKE '%${p.search}%'
+    (c.table || '.' || c.name) ILIKE '%${p.search}%'
+    OR c.name ILIKE '%${p.search}%'
   )`
     : ""}
 ORDER BY c.name ASC
@@ -114,6 +140,7 @@ export default {
   fetchTables,
   fetchViews,
   fetchMaterializedViews,
+  searchDatabases,
   searchTables,
   searchColumns,
 };
