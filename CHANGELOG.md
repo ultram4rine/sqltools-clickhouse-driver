@@ -15,7 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improve meta in explorer (#682).
-- Improve static keywords completions (#683).
+- Improve static keywords completions (#683). ClickHouse server version
+  needs to be at least `24.8`. On older completions might not work.
 
 ### Fixed
 
