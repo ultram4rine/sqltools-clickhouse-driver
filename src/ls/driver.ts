@@ -415,8 +415,8 @@ export default class ClickHouseDriver
               value: `\`\`\`yaml\nWORD: ${
                 item.label
               }\nTYPE: data type\nCase insensitive: ${!!item.case_insensitive}\n${
-                item.alias ? `Alias: ${item.alias}` : ""
-              }\n\`\`\``,
+                item.alias ? `Alias: ${item.alias}\n` : ""
+              }\`\`\``,
             },
           };
         }
